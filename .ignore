@@ -1,0 +1,23 @@
+# Generated for Codex file visibility.
+#
+# Codex (and some tooling) uses ignore files to decide which files are visible/searchable.
+# This repo's `.gitignore` intentionally ignores things like `workers.jsonc`, `temp/`, and
+# `artifacts/`, but the agent still needs to *recognize* those files to do its job.
+#
+# This `.ignore` file re-includes everything that `.gitignore` excludes.
+# NOTE: Visibility is not permission — avoid reading/seeking secrets (e.g. `.env`) unless
+# the task explicitly requires it.
+
+!workers.jsonc
+!temp/
+!temp/**
+!artifacts/
+!artifacts/**
+!.codex/
+!.codex/**
+
+!node_modules/
+!node_modules/**
+!.venv/
+!.venv/**
+!.env

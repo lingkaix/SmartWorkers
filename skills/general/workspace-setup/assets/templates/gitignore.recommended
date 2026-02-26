@@ -1,0 +1,60 @@
+# --- Recommended additions (review and adjust for your repo) ---
+
+# For Smart Workers
+workers.jsonc
+temp/
+artifacts/
+.codex/
+
+# macOS (github/gitignore Global/macOS.gitignore)
+.DS_Store
+__MACOSX/
+._*
+.AppleDouble
+.LSOverride
+Icon[ ]
+.Spotlight-V100
+.Trashes
+
+# Node (github/gitignore Node.gitignore)
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm
+.eslintcache
+.stylelintcache
+.cache
+.parcel-cache
+.next
+dist
+dist/
+build
+build/
+.env
+.env.*
+!.env.example
+
+# Python (github/gitignore Python.gitignore)
+__pycache__/
+*.py[codz]
+*$py.class
+.Python
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+ENV/
+env/
+
+# Workspace outputs
+artifacts/

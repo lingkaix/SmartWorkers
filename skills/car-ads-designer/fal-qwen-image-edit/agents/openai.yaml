@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fal Qwen Image Edit"
+  short_description: "Generate/edit images with fal.ai Qwen"
+  default_prompt: "Use $fal-qwen-image-edit to generate/edit images from reference images with fal.ai Qwen."

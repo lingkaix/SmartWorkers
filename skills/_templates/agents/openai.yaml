@@ -1,0 +1,19 @@
+# Minimal UI manifest template (mirrors upstream `openai/skills`)
+#
+# Keep this file in sync with `SKILL.md` when you use it.
+# This file is UI metadata; the full skill contract lives in `SKILL.md`.
+#
+# Conventions:
+# - Quote all string values.
+# - `short_description` is a menu label (short).
+# - `default_prompt` is typically 1 sentence and must mention `$<skill-name>`.
+
+interface:
+  display_name: "<Skill display name>"
+  short_description: "<Short UI blurb>"
+  default_prompt: "Use $<skill-name> to <do the job>."
+
+# Optional UI polish (only if you have assets/colors):
+#   icon_small: "./assets/icon-400px.png"
+#   icon_large: "./assets/logo.svg"
+#   brand_color: "#3B82F6"

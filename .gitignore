@@ -1,0 +1,11 @@
+# SmartWorkers
+workers.jsonc
+temp/**
+!temp/AGENTS.md
+artifacts/**
+!artifacts/AGENTS.md
+.codex/
+
+node_modules/
+.venv/
+.env

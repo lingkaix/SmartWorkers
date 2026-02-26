@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workspace Setup"
+  short_description: "Bootstrap a repo toolchain"
+  default_prompt: "Use $workspace-setup to bootstrap this repo's toolchain + workspace skeleton via mise."

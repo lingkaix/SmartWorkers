@@ -1,0 +1,21 @@
+{
+  // Copy this file to `workers.jsonc` and fill in values locally.
+  // Do not commit real secrets.
+
+  "openai": {
+    "apiKey": "YOUR_OPENAI_API_KEY",
+    "baseUrl": "https://api.openai.com/v1"
+  },
+
+  // Example: vendor login or internal system credentials
+  "subaruMarketing": {
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD"
+  },
+
+  // fal.ai API key for image generation/editing (format: "key_id:secret")
+  "fal": {
+    "key": "YOUR_FAL_KEY"
+  }
+}
+

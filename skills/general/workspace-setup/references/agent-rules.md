@@ -4,6 +4,13 @@ Use this as a guide when creating or updating a workspace-root `AGENTS.md`.
 
 An `AGENTS.md` file is for **agent runners, developers, and maintainers** of the repo (not end users). It should be short, practical, and optimized for how agents actually work.
 
+### Where the rules must live
+
+When creating a new workspace (or changing how the workspace is run), **all rules and details in this file must be written into the workspace-root `AGENTS.md`**.
+
+- Do not leave critical policy only in skill docs (like `SKILL.md`) or in this reference file.
+- Treat workspace-root `AGENTS.md` as the single place an agent should look first to understand how to operate safely and correctly in this repo.
+
 ### Goals
 
 - Make the “right thing” the default for agents working in this workspace.
@@ -113,6 +120,13 @@ When setting up or polishing a workspace, ensure these **key folders** exist and
 
 If a key folder is missing, create it. If its `AGENTS.md` is missing or outdated, create/polish it.
 These per-folder `AGENTS.md` files should be tracked in git even if the rest of the folder is ignored.
+
+### Ignore/visibility policy (`.ignore`)
+
+Some agent runners use `.ignore` to decide which files are visible/searchable.
+
+- Keep `.ignore` scoped to working folders (for example: re-include `temp/` and `artifacts/` if they are ignored by `.gitignore`).
+- Do not use `.ignore` to broadly override `.gitignore` for the whole repo.
 
 ### Recommended `AGENTS.md` template
 

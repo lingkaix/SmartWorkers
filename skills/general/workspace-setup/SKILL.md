@@ -20,6 +20,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
 
    - Confirm the repo has an `AGENTS.md` at the workspace root.
    - If it needs to be created or polished, use `references/agent-rules.md` as the authoring guide.
+   - All important workspace rules and details must live in the workspace-root `AGENTS.md` (don’t leave critical policy only in skill docs or references).
 
 2) Ensure key workspace folders and local rules exist:
 
@@ -33,7 +34,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
      - `cd skills/general/workspace-setup`
      - `bash scripts/init_workspace.sh`
    - Alternative (from repo root): `bash skills/general/workspace-setup/scripts/init_workspace.sh`
-   - This also generates a `.ignore` file that *re-includes* everything excluded by `.gitignore` so Codex can recognize all workspace files (per openai/codex#2952 guidance).
+   - This also generates a `.ignore` file that re-includes working folders (`temp/`, `artifacts/`) even if they’re ignored by `.gitignore`.
    - Review what was generated in `temp/workspace-setup/` before applying.
 
 4) Apply to the repo root when ready:
@@ -85,7 +86,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
 
 - `.mise.toml` (tool versions + helper tasks)
 - `.gitignore` (workspace ignore patterns; generated candidate if one already exists)
-- `.ignore` (Codex file-visibility overrides; re-includes paths ignored by `.gitignore`)
+- `.ignore` (Codex file-visibility overrides; re-includes working folders like `temp/` and `artifacts/`)
 - `package.json` (Node workspace manifest)
 - `pyproject.toml` (Python deps; uv reads/writes this)
 - `temp/workspace-setup/` (generated previews when not using `--apply`)
@@ -111,5 +112,5 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
 
 - Do not overwrite existing `.mise.toml` or `pyproject.toml` without reviewing diffs.
 - Do not add secrets to `pyproject.toml` or `.mise.toml`.
-- `.ignore` may make locally-ignored files (including `workers.jsonc`) visible to the agent; do not read/print secrets unless explicitly required.
+- `.ignore` changes agent visibility; do not read/print secrets unless explicitly required.
 - Keep generated outputs in `temp/` unless intentionally applying to the repo.

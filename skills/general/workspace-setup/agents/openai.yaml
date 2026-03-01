@@ -1,4 +1,4 @@
 interface:
   display_name: "Workspace Setup"
-  short_description: "Standardize repo toolchain (mise)"
-  default_prompt: "Use $workspace-setup to standardize this repo’s dev+CI toolchain (mise: Node/Python/uv) and generate the baseline workspace skeleton."
+  short_description: "Initialize an agent workspace skeleton"
+  default_prompt: "Use $workspace-setup to initialize a SmartWorkers-style agent workspace (README.md + AGENTS.md + temp/ + artifacts/ + ignore/config defaults) and the required toolchain baseline (mise/uv)."

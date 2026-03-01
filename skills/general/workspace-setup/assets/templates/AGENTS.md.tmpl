@@ -1,6 +1,13 @@
-# Agent Instructions (SmartWorkers)
+# Agent Instructions
 
-This file is for agent runners, developers, and maintainers of this repo (not end users). End-user docs live in `README.md`.
+This file is for agent runners and maintainers of this workspace. It defines how work is organized so outputs are easy to review and share.
+
+## Workspace goals
+
+- Produce reviewable deliverables in `artifacts/`.
+- Keep intermediate work in `temp/`.
+- Keep secrets out of git and out of chat transcripts.
+- Keep procedures repeatable (write down what you did, where outputs are, and what assumptions you made).
 
 ## Runtime and toolchain policy
 
@@ -67,7 +74,7 @@ Once a user has specified a skill (or you have decided to use one) and you are r
 - Do not try to bypass the failure by writing ad-hoc one-off scripts, switching to an unrelated local implementation, or otherwise changing the agreed approach without user direction.
 - Report the exact command, the error output, and the likely category (bug vs config vs network vs upstream service), plus a clear next step for the user (retry later, check network, update `workers.jsonc`, file an issue, etc.).
 
-## Output locations (SmartWorkers)
+## Output locations
 
 - Put intermediate/working files under `temp/`.
 - Put final deliverables under `artifacts/`.

@@ -1,0 +1,52 @@
+# {{PROJECT_NAME}} (SmartWorkers workspace)
+
+This folder is set up to help an AI agent (e.g. Codex) do real work in a predictable way, with outputs that are easy to review and share.
+
+## What this workspace is for
+
+Use this workspace when you want an AI agent to complete tasks like:
+
+- Sales/admin: outreach drafts, call summaries, account research
+- Recruiting: role briefs, interview kits, candidate comparisons
+- Operations: reports, SOP drafts, FAQ/support macros
+- Creative: ad copy variants, briefs, outlines, image generation runs
+- Software: small scripts, data processing, automation helpers
+
+## Where work goes
+
+- `temp/` — scratch work (drafts, logs, intermediate files). Safe to delete.
+- `artifacts/` — final deliverables you can review and share.
+
+Tip: each agent run should create matching folders under both:
+`temp/<task>/<run-id>/` and `artifacts/<task>/<run-id>/`.
+
+## Secrets and configuration (important)
+
+- Copy `workers.example.jsonc` to `workers.jsonc`.
+- Put API keys and private settings in `workers.jsonc` only.
+- Do not commit `workers.jsonc` to git (it should be ignored automatically).
+
+## Toolchain (required for running helper scripts)
+
+This workspace uses `mise` to manage tool versions (Node/Python/uv).
+
+1) Install `mise` (once per computer): https://mise.jdx.dev/getting-started.html
+2) In this folder, run:
+
+```sh
+mise install
+mise tasks run setup
+```
+
+If you don’t know what this means, ask a technical teammate to run the two commands above once — after that, you can focus on tasks and reviewing outputs.
+
+## How to use with Codex
+
+1) Install the worker skill(s) you want into `.codex/skills/` (ask whoever provided the worker library).
+2) Open Codex in this folder.
+3) Ask for a task and specify outputs, for example:
+
+> Output: write drafts to `temp/<task>/<run-id>/` and final deliverables to `artifacts/<task>/<run-id>/`.
+
+See `AGENTS.md` for the detailed rules the agent follows.
+

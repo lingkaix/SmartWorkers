@@ -1,10 +1,14 @@
-# --- Recommended additions (review and adjust for your repo) ---
+# --- Recommended additions (review and adjust for your workspace) ---
 
-# For Smart Workers
+# SmartWorkers / agent workspaces
 workers.jsonc
-temp/
-artifacts/
 .codex/
+
+# Ignore scratch + deliverables by default, but keep folder rules tracked
+temp/**
+!temp/AGENTS.md
+artifacts/**
+!artifacts/AGENTS.md
 
 # macOS (github/gitignore Global/macOS.gitignore)
 .DS_Store
@@ -16,7 +20,7 @@ Icon[ ]
 .Spotlight-V100
 .Trashes
 
-# Node (github/gitignore Node.gitignore)
+# Optional: Node (github/gitignore Node.gitignore)
 node_modules/
 *.log
 npm-debug.log*
@@ -37,7 +41,7 @@ build/
 .env.*
 !.env.example
 
-# Python (github/gitignore Python.gitignore)
+# Optional: Python (github/gitignore Python.gitignore)
 __pycache__/
 *.py[codz]
 *$py.class
@@ -55,6 +59,3 @@ htmlcov/
 venv/
 ENV/
 env/
-
-# Workspace outputs
-artifacts/

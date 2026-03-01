@@ -18,8 +18,8 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
 
 1) Ensure workspace-root agent guidance is present and up to date:
 
-   - Confirm the repo has an `AGENTS.md` at the workspace root.
-   - If it needs to be created or polished, use `references/agent-rules.md` as the authoring guide.
+   - If the repo **already has** a workspace-root `AGENTS.md`, **stop** and create a **new empty folder** for the new workspace; then re-run this skill with `--repo <new-folder>`.
+   - If the repo does **not** have `AGENTS.md`, `scripts/init_workspace.sh --apply` will create it from `assets/templates/AGENTS.md.tmpl` (never overwriting existing files).
    - All important workspace rules and details must live in the workspace-root `AGENTS.md` (don’t leave critical policy only in skill docs or references).
 
 2) Ensure key workspace folders and local rules exist:
@@ -27,6 +27,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
    - Confirm `temp/` exists and contains `temp/AGENTS.md`.
    - Confirm `artifacts/` exists and contains `artifacts/AGENTS.md`.
    - Ensure these per-folder `AGENTS.md` files are tracked in git even if the rest of the folder is ignored.
+   - `scripts/init_workspace.sh` will (when applying) create `temp/AGENTS.md` and `artifacts/AGENTS.md` if missing (never overwriting existing ones).
 
 3) Generate config files (safe default: write to `temp/`):
 
@@ -89,6 +90,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet ac
 - `.ignore` (Codex file-visibility overrides; re-includes working folders like `temp/` and `artifacts/`)
 - `package.json` (Node workspace manifest)
 - `pyproject.toml` (Python deps; uv reads/writes this)
+- `AGENTS.md` (workspace-root agent rules)
 - `temp/workspace-setup/` (generated previews when not using `--apply`)
   - If you created or updated `AGENTS.md`, it should be at the workspace root (not under `temp/`).
 - `temp/AGENTS.md` (rules for scratch outputs)

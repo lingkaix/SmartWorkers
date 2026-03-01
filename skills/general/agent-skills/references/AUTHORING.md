@@ -5,6 +5,8 @@ This is a maintainer guide for writing skills that are easy to:
 - skim (humans can review safely),
 - run (inputs/outputs are explicit and reproducible).
 
+Use `https://github.com/openai/skills` as the default style reference for examples, writing patterns, and “what good looks like” when creating or updating any skill in this repo.
+
 In this repo, a **worker** is a **role** plus a curated set of skills that role uses. Optimizing skills for maintainers means optimizing the edit → validate → test loop.
 
 ## Directory + naming
@@ -13,7 +15,7 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 - Skill contract: `skills/<role>/<skill-name>/SKILL.md`
 - Optional helpers: `scripts/` (deterministic automation), `assets/` (templates), `references/` (heavy docs)
 - `name` in frontmatter must match `<skill-name>` exactly.
-- Start from the template when possible: `skills/_templates/SKILL.md`
+- Start from the template when possible: `skills/general/agent-skills/assets/templates/SKILL.md`
 
 ## Context economy (why structure matters)
 
@@ -64,14 +66,6 @@ Conventions (mirrors upstream `openai/skills`):
 - Keep `interface.short_description` short (roughly 25–64 chars), one sentence, no operational detail.
 - Keep `interface.default_prompt` short (typically 1 sentence) and explicitly mention `$<skill-name>`.
 
-Example:
-
-```yaml
-interface:
-  short_description: "Extract structured data from PDFs."
-  default_prompt: "Use $pdf to extract text and tables from a PDF into JSON/CSV."
-```
-
 Put the richer “Use when… / outputs / auth” detail in `SKILL.md`.
 
 ## Progressive disclosure patterns
@@ -79,12 +73,6 @@ Put the richer “Use when… / outputs / auth” detail in `SKILL.md`.
 - Keep `SKILL.md` as the navigation + essential workflow.
 - Put variant-specific details (frameworks/providers/products) in `references/` and link them explicitly.
 - Avoid deep reference chains (prefer one hop from `SKILL.md` → reference file).
-
-## What *not* to add
-
-Avoid extra docs that don’t help an agent do the job:
-- `README.md`, `CHANGELOG.md`, “quick reference” files, and other process artifacts
-- Long background essays that don’t change the procedure or constraints
 
 ## SKILL.md body: recommended outline
 
@@ -113,11 +101,6 @@ Use these headings so both agents and humans know where to look:
 - Compliance and IP notes (when relevant)
 - Accuracy expectations and how to validate
 
-Optional sections (use when helpful, keep short):
-- `## Non-goals` (what the skill will not do)
-- `## Troubleshooting` (common failures + fixes)
-- `## Examples` (1–2 minimal invocations)
-
 ## The maintainer loop (edit → validate → test)
 
 Recommended “done” workflow after changing a skill:
@@ -129,45 +112,3 @@ Recommended “done” workflow after changing a skill:
    - Run any referenced helper scripts with minimal safe inputs (prefer dry-run flags), and/or
    - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `temp/`/`artifacts/`.
 
-## Workflow writing tips (agent-friendly)
-
-- Prefer imperative, deterministic steps (“Run X”, “Write Y to Z”).
-- Make inputs/outputs explicit at each step (agents shouldn’t guess paths).
-- Use consistent vocabulary:
-  - “Required inputs” (not “Prereqs” in one skill and “Inputs” in another)
-  - “Outputs” and “Definition of done” in every skill
-- Add a “Stop and request review” step when results are subjective or high impact.
-
-## Validation (optional but recommended)
-
-- Run the AgentSkills validator when available:
-  - `skills-ref validate ./skills/<role>/<skill-name>`
-- Spot-check that `agents/openai.yaml` (if present) matches the `SKILL.md` name/display name and uses a short description.
-
-## Required config pattern (must-stop-on-missing)
-
-When a skill requires API keys, credentials, or endpoints:
-
-- Use workspace-root `workers.jsonc` as the single source of truth (do not route around it by asking for raw keys or using env vars).
-- Keep user config minimal: prefer a small number of stable sections and sensible defaults (don’t invent many one-off keys).
-- If `workers.jsonc` is missing a required value:
-  1) Add a **placeholder hint** to `workers.jsonc` (example: `"apiKey": "[PLEASE ENTER KEY HERE]"`).
-  2) Stop the task and ask the user to fill in `workers.jsonc`.
-  3) Tell the user to restart/re-run the task after updating config.
-- Never print secrets from `workers.jsonc` into chat/logs.
-
-## Output convention (temp vs artifacts, with per-task README)
-
-For any non-trivial task:
-
-- Create a task folder under `temp/` for in-progress work (drafts, logs, intermediate generations).
-- Create a matching task folder under `artifacts/` for the final deliverable(s).
-- Each task folder must contain a `README.md` with:
-  - task name / purpose
-  - current status (in-progress / blocked / done)
-  - key decisions + how to reproduce
-  - a thorough file list with brief descriptions
-
-Suggested paths:
-- Working: `temp/<role>/<skill-name>/<timestamp-or-task-id>/`
-- Final: `artifacts/<role>/<skill-name>/<timestamp-or-task-id>/`

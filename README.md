@@ -64,31 +64,12 @@ Notes:
 
 ## Skill format
 
-Skills in this repo follow the AgentSkills spec (`https://agentskills.io/specification`). See `AGENTS.md` for maintainer details.
-
-## Workspace setup (optional)
-
-You only need this if you’re developing workers or running local helper scripts from this repo.
-
-1) Install `mise` (toolchain manager)
-2) Run:
-
-```sh
-mise tasks run setup
-```
+Skills in this repo follow the AgentSkills spec (`https://agentskills.io/specification`).
 
 ## For skill makers (maintainers)
 
-If you’re using this repo as a toolkit to **create/update/test skills** (i.e., build new “workers” out of skill sets), start here:
+If you’re creating/updating skills in this repo:
 
-- Maintainer workflow + repo rules: `AGENTS.md`
-- Skill authoring house style: `skills/AUTHORING.md`
-- Skill sync into local Codex test setup: `skills/AGENTS.md`
-
-## Status
-
-Early-stage foundation work:
-
-- Standardize skill structure and quality bar
-- Organize skills by **role** (use case)
-- Make skills run well in **Codex** first
+1) Read the AgentSkills spec: `https://agentskills.io/specification`
+2) Install mise (toolchain manager, `https://mise.jdx.dev/`). And then set up the dev environment (above): `mise tasks run setup`
+3) Use the `agent-skills` maintainer skill: `skills/general/agent-skills/SKILL.md`

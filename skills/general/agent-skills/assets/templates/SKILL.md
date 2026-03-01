@@ -1,7 +1,7 @@
 ---
 name: <skill-name>
-description: <Verb + object + key nouns>. Use when <common user triggers / synonyms>.
-compatibility: Local filesystem access required and require `workers.jsonc` keys when applicable.
+description: "<Verb + object + key nouns>. Use when <common user triggers / synonyms>."
+compatibility: "<E.g. Local filesystem required. macOS/Linux. Internet required for X.>"
 ---
 
 # <Skill display name>
@@ -57,3 +57,4 @@ compatibility: Local filesystem access required and require `workers.jsonc` keys
 - Do not paste/print keys from `workers.jsonc`; only confirm whether values are present.
 - Validate outputs (spot-check, diff, sampling).
 - Confirm before destructive or paid actions.
+

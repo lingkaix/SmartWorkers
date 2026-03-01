@@ -13,11 +13,3 @@
 !temp/**
 !artifacts/
 !artifacts/**
-!.codex/
-!.codex/**
-
-!node_modules/
-!node_modules/**
-!.venv/
-!.venv/**
-!.env

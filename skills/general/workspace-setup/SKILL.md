@@ -1,6 +1,6 @@
 ---
 name: workspace-setup
-description: Bootstrap a repo toolchain and workspace skeleton with mise: generate `.mise.toml`, `pyproject.toml`, `package.json`, `.gitignore`, and `.ignore` plus `temp/` and `artifacts/` rules. Use when setting up a fresh checkout, fixing “wrong Node/Python/uv version” issues, or standardizing dev+CI environments.
+description: "Bootstrap and standardize a repo’s dev+CI toolchain with mise (Node.js, Python, uv, etc.) and generate a workspace skeleton (`.mise.toml`, `pyproject.toml`, `package.json`, `.gitignore`, `.ignore`, plus `temp/` and `artifacts/` conventions). Use when starting a fresh checkout, fixing tool-version drift errors, or making the project reproducible across machines and CI."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash + git. Internet access typically required for mise/uv downloads."
 ---
 

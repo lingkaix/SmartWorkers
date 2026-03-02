@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fal Veo3 Image to Video"
+  short_description: "Generate videos with fal.ai Veo image-to-video"
+  default_prompt: "Use $fal-veo3-image-to-video to generate videos from a reference image with fal.ai Veo."

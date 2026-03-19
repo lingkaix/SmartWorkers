@@ -8,6 +8,8 @@ artifacts/**
 .agents/
 skills-lock.json
 
+test-workspace/
+
 node_modules/
 .venv/
 .env

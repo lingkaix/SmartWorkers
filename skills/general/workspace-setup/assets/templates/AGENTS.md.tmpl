@@ -6,6 +6,7 @@ This file is for agent runners and maintainers of this workspace. It defines how
 
 - Produce reviewable deliverables in `artifacts/`.
 - Keep intermediate work in `logs/`.
+- Leave `temp/` available for user-managed temporary files during active work.
 - Keep secrets out of git and out of chat transcripts.
 - Keep procedures repeatable (write down what you did, where outputs are, and what assumptions you made).
 
@@ -92,6 +93,9 @@ Once a user has specified a skill (or you have decided to use one) and you are r
 ## Output locations
 
 - Put intermediate/working files under `logs/`.
+- Treat `temp/` as user-managed scratch space for ad-hoc files they want to keep around during the work.
+- Do not write new agent outputs into `temp/` unless the user explicitly asks for it.
+- If the user places files in `temp/`, it is OK to read or use them when relevant to the task.
 - Put final deliverables under `artifacts/`.
 - Group each task run into a dedicated subfolder under both `logs/` and `artifacts/`, and keep the run folder name identical in both places.
   - Use this naming format (local time): `YYYYMMDD-HHMMSS-<epochMs>-<short-desc>`
@@ -106,6 +110,8 @@ When setting up or polishing a workspace, ensure these key folders exist and are
 
 - `logs/` (scratch, can be deleted anytime)
   - Must contain `logs/AGENTS.md` describing usage, restrictions, and what belongs here.
+- `temp/` (user-managed temporary files)
+  - Must contain `temp/AGENTS.md` describing that it is primarily for user-kept temporary files during active work.
 - `artifacts/` (final deliverables)
   - Must contain `artifacts/AGENTS.md` describing what counts as a deliverable, expected structure, and any restrictions.
 

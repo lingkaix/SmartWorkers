@@ -28,7 +28,8 @@ Notes:
   - With --apply, existing files are never overwritten.
   - Generates the baseline workspace skeleton:
     - repo root: AGENTS.md (workspace policy)
-    - logs/: logs/AGENTS.md (scratch rules)
+    - logs/: logs/AGENTS.md (agent scratch rules)
+    - temp/: temp/AGENTS.md (user temporary-file rules)
     - artifacts/: artifacts/AGENTS.md (deliverables rules)
     - README.md, WORKFLOW.md, .gitignore, .ignore, workers.example.jsonc
     - .mise.toml, package.json, pyproject.toml
@@ -145,7 +146,7 @@ generate_ignore_for_workdirs() {
 #
 # Codex (and some tooling) uses ignore files to decide which files are visible/searchable.
 # This workspace's `.gitignore` may intentionally ignore paths the agent still needs to
-# recognize (e.g. `workers.jsonc`, `logs/`, `artifacts/`). This `.ignore` file re-includes
+# recognize (e.g. `workers.jsonc`, `logs/`, `temp/`, `artifacts/`). This `.ignore` file re-includes
 # the essential working paths for agent runs and deliverables.
 #
 # NOTE: Visibility is not permission — avoid reading secrets unless the task requires it.
@@ -156,6 +157,8 @@ EOF
 !workers.jsonc
 !logs/
 !logs/**
+!temp/
+!temp/**
 !artifacts/
 !artifacts/**
 EOF
@@ -190,11 +193,13 @@ pyproject_target="$out_dir/pyproject.toml"
 
 if [[ "$apply" == "true" ]]; then
   workspace_agents_target="$repo/AGENTS.md"
-  temp_agents_target="$repo/logs/AGENTS.md"
+  logs_agents_target="$repo/logs/AGENTS.md"
+  temp_agents_target="$repo/temp/AGENTS.md"
   artifacts_agents_target="$repo/artifacts/AGENTS.md"
 else
   workspace_agents_target="$out_dir/AGENTS.md"
-  temp_agents_target="$out_dir/logs.AGENTS.md"
+  logs_agents_target="$out_dir/logs.AGENTS.md"
+  temp_agents_target="$out_dir/temp.AGENTS.md"
   artifacts_agents_target="$out_dir/artifacts.AGENTS.md"
 fi
 
@@ -242,12 +247,13 @@ render_template "$assets_dir/pyproject.toml.tmpl" \
   | write_if_missing "$pyproject_target" "pyproject.toml"
 
 if [[ "$apply" == "true" ]]; then
-  mkdir -p "$repo/logs" "$repo/artifacts"
+  mkdir -p "$repo/logs" "$repo/temp" "$repo/artifacts"
 fi
 
 generate_workspace_root_agents_md | write_if_missing "$workspace_agents_target" "AGENTS.md"
 
-generate_folder_agents_md "logs.AGENTS.md.tmpl" | write_if_missing "$temp_agents_target" "logs/AGENTS.md"
+generate_folder_agents_md "logs.AGENTS.md.tmpl" | write_if_missing "$logs_agents_target" "logs/AGENTS.md"
+generate_folder_agents_md "temp.AGENTS.md.tmpl" | write_if_missing "$temp_agents_target" "temp/AGENTS.md"
 generate_folder_agents_md "artifacts.AGENTS.md.tmpl" | write_if_missing "$artifacts_agents_target" "artifacts/AGENTS.md"
 
 if [[ "$apply" == "false" ]]; then

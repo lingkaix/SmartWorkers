@@ -1,4 +1,4 @@
 interface:
   display_name: "Workspace Setup"
   short_description: "Initialize an agent workspace skeleton"
-  default_prompt: "Use $workspace-setup to initialize a SmartWorkers-style agent workspace (README.md + WORKFLOW.md + AGENTS.md + logs/ + artifacts/ + ignore/config defaults) and the required toolchain baseline (mise/uv)."
+  default_prompt: "Use $workspace-setup to initialize a SmartWorkers-style agent workspace (README.md + WORKFLOW.md + AGENTS.md + logs/ + temp/ + artifacts/ + ignore/config defaults) and the required toolchain baseline (mise/uv)."

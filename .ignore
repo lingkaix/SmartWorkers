@@ -11,5 +11,7 @@
 !workers.jsonc
 !temp/
 !temp/**
+!logs/
+!logs/**
 !artifacts/
 !artifacts/**

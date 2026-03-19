@@ -15,10 +15,12 @@ Use this workspace when you want an AI agent to complete tasks like:
 ## Where work goes
 
 - `logs/` — scratch work (drafts, logs, intermediate files). Safe to delete.
+- `temp/` — temporary files the user wants to keep around during the work.
 - `artifacts/` — final deliverables you can review and share.
 
 Tip: each agent run should create matching folders under both:
 `logs/<task>/<run-id>/` and `artifacts/<task>/<run-id>/`.
+Use `temp/` for user-managed one-off files that do not need the structured run-folder layout.
 
 ## Secrets and configuration (important)
 

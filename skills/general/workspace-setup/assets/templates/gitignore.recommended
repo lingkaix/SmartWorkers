@@ -9,6 +9,8 @@ skills-lock.json
 # Ignore scratch + deliverables by default, but keep folder rules tracked
 logs/**
 !logs/AGENTS.md
+temp/**
+!temp/AGENTS.md
 artifacts/**
 !artifacts/AGENTS.md
 

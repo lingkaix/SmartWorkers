@@ -1,6 +1,6 @@
 ---
 name: workspace-setup
-description: "Initialize a SmartWorkers-style **agent workspace** for any kind of work (sales, ops, recruiting, creative, research, software): generates a reviewable workspace skeleton (`README.md`, `WORKFLOW.md`, `AGENTS.md`, `logs/`, `artifacts/`, `.gitignore`, `.ignore`, `workers.example.jsonc`) and a required code-execution toolchain baseline (`.mise.toml`, `pyproject.toml`, `package.json`) via `mise` + `uv`."
+description: "Initialize a SmartWorkers-style **agent workspace** for any kind of work (sales, ops, recruiting, creative, research, software): generates a reviewable workspace skeleton (`README.md`, `WORKFLOW.md`, `AGENTS.md`, `logs/`, `temp/`, `artifacts/`, `.gitignore`, `.ignore`, `workers.example.jsonc`) and a required code-execution toolchain baseline (`.mise.toml`, `pyproject.toml`, `package.json`) via `mise` + `uv`."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access typically required for mise/uv runtime downloads."
 ---
 
@@ -25,9 +25,10 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 2) Ensure key workspace folders and local rules exist:
 
    - Confirm `logs/` exists and contains `logs/AGENTS.md`.
+   - Confirm `temp/` exists and contains `temp/AGENTS.md`.
    - Confirm `artifacts/` exists and contains `artifacts/AGENTS.md`.
    - Ensure these per-folder `AGENTS.md` files are tracked in git even if the rest of the folder is ignored.
-   - `scripts/init_workspace.sh` will (when applying) create `logs/AGENTS.md` and `artifacts/AGENTS.md` if missing (never overwriting existing ones).
+   - `scripts/init_workspace.sh` will (when applying) create `logs/AGENTS.md`, `temp/AGENTS.md`, and `artifacts/AGENTS.md` if missing (never overwriting existing ones).
 
 3) Generate baseline workspace files (safe default: write to `logs/`):
 
@@ -39,9 +40,9 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
      - `README.md` (non-technical overview + how to use the workspace)
      - `WORKFLOW.md` (simple user-maintained playbook for repeatable workflows; agents should consult it when the user says `work work`)
      - `AGENTS.md` (workspace policy)
-     - `logs/AGENTS.md` and `artifacts/AGENTS.md` (folder-local rules)
-     - `.gitignore` (keeps `workers.jsonc` untracked; ignores `logs/**` + `artifacts/**` but re-includes their `AGENTS.md`)
-     - `.ignore` (re-includes `logs/` + `artifacts/` for agent visibility even when `.gitignore` hides them)
+     - `logs/AGENTS.md`, `temp/AGENTS.md`, and `artifacts/AGENTS.md` (folder-local rules)
+     - `.gitignore` (keeps `workers.jsonc` untracked; ignores `logs/**`, `temp/**`, and `artifacts/**` but re-includes their `AGENTS.md`)
+     - `.ignore` (re-includes `logs/`, `temp/`, and `artifacts/` for agent visibility even when `.gitignore` hides them)
      - `workers.example.jsonc` (copy to `workers.jsonc` locally; never commit secrets)
      - `.mise.toml`, `package.json`, `pyproject.toml` (required toolchain baseline for running helper scripts and automation)
    - Review what was generated in `logs/workspace-setup/` before applying.
@@ -69,6 +70,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
     - `WORKFLOW.md.tmpl`
     - `AGENTS.md.tmpl`
     - `logs.AGENTS.md.tmpl`
+    - `temp.AGENTS.md.tmpl`
     - `artifacts.AGENTS.md.tmpl`
 
 5) Install toolchain and bootstrap skill management (required for code execution)
@@ -99,7 +101,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 - `WORKFLOW.md` (user-maintained recurring workflow guide; triggered by the phrase `work work`)
 - `.mise.toml` (tool versions + helper tasks)
 - `.gitignore` (workspace ignore patterns; generated candidate if one already exists)
-- `.ignore` (Codex file-visibility overrides; re-includes working folders like `logs/` and `artifacts/`)
+- `.ignore` (Codex file-visibility overrides; re-includes working folders like `logs/`, `temp/`, and `artifacts/`)
 - `AGENTS.md` (workspace-root agent rules)
 - `workers.example.jsonc` (example config; do not put real keys here)
 - `package.json` (Node workspace manifest)
@@ -107,6 +109,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 - `logs/workspace-setup/` (generated previews when not using `--apply`)
   - After you apply, `AGENTS.md` should live at the workspace root (not under `logs/`).
 - `logs/AGENTS.md` (rules for scratch outputs)
+- `temp/AGENTS.md` (rules for user-managed temporary files)
 - `artifacts/AGENTS.md` (rules for deliverables)
 
 ## Definition of done
@@ -115,6 +118,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 - `WORKFLOW.md` exists in the workspace root and gives the user a simple way to define recurring workflows
 - `AGENTS.md` exists in the workspace root and is readable by humans
 - `logs/` exists and contains `logs/AGENTS.md`
+- `temp/` exists and contains `temp/AGENTS.md`
 - `artifacts/` exists and contains `artifacts/AGENTS.md`
 - `.ignore` exists in the repo root
 - `.gitignore` exists and keeps `workers.jsonc` untracked
@@ -129,3 +133,4 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 - Do not add secrets to `workers.example.jsonc`, `pyproject.toml`, or `.mise.toml`.
 - `.ignore` changes agent visibility; do not read/print secrets unless explicitly required.
 - Keep generated outputs in `logs/` unless intentionally applying to the repo.
+- Reserve `temp/` for user-kept temporary files unless the user explicitly asks the agent to write there.

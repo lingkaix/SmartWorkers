@@ -15,11 +15,11 @@ Options:
   --name NAME         Skill name (required; must be AgentSkills-compliant)
   --description TEXT  Frontmatter description (default: placeholder)
   --with-openai-yaml  Also scaffold agents/openai.yaml (default: false)
-  --apply             Write into skills/<role>/<skill-name>/ (default: write into temp/)
+  --apply             Write into skills/<role>/<skill-name>/ (default: write into logs/)
   -h, --help          Show help
 
 Notes:
-  - Without --apply, files are written to temp/agent-skills/<timestamp>/<role>/<skill-name>/ for review.
+  - Without --apply, files are written to logs/agent-skills/<timestamp>/<role>/<skill-name>/ for review.
   - With --apply, this script refuses to overwrite an existing skill directory.
   - Templates are read from skills/general/agent-skills/assets/templates/.
 EOF
@@ -92,7 +92,7 @@ if [[ "$apply" == "true" ]]; then
     exit 1
   fi
 else
-  out_dir="$repo/temp/agent-skills/$timestamp/$role/$name"
+  out_dir="$repo/logs/agent-skills/$timestamp/$role/$name"
 fi
 
 mkdir -p "$out_dir"

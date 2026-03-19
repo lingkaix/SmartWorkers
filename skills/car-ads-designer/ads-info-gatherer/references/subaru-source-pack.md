@@ -1,6 +1,6 @@
 # Subaru Source Pack Contract
 
-This reference bundles the Subaru-specific context that was previously explored from working notes and temporary files, so the skill can travel cleanly with the repo.
+This reference bundles the Subaru-specific context that was previously explored from working notes and log files, so the skill can travel cleanly with the repo.
 
 ## Accepted input modes
 

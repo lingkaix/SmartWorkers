@@ -1,6 +1,6 @@
 ---
 name: fal-veo3-image-to-video
-description: Generate videos from a reference image using fal.ai Veo 3.1 image-to-video (`fal-ai/veo3.1/image-to-video`). Use when you need short video variants (ad b-roll, product shots, storyboards) from a still image, with final outputs saved to `artifacts/` and request/response logs saved to `temp/`.
+description: Generate videos from a reference image using fal.ai Veo 3.1 image-to-video (`fal-ai/veo3.1/image-to-video`). Use when you need short video variants (ad b-roll, product shots, storyboards) from a still image, with final outputs saved to `artifacts/` and request/response logs saved to `logs/`.
 ---
 
 # fal-veo3-image-to-video
@@ -34,7 +34,7 @@ description: Generate videos from a reference image using fal.ai Veo 3.1 image-t
 
 2) Run the generator
 - Use the bundled script to call fal.ai.
-- **Final deliverables go to `artifacts/`**; request/response logs and intermediate files stay in `temp/`.
+- **Final deliverables go to `artifacts/`**; request/response logs and intermediate files stay in `logs/`.
   - Basic:
     - `node skills/car-ads-designer/fal-veo3-image-to-video/scripts/generate.mjs --prompt "..." --image path/to/ref.jpg`
   - Add model parameters (examples; use the model’s `llms.txt` for exact field names):
@@ -46,11 +46,11 @@ description: Generate videos from a reference image using fal.ai Veo 3.1 image-t
 
 4) Review outputs
 - Inspect the **final** videos under `artifacts/...` first.
-- If something looks off, use the working folder in `temp/...` to debug (it includes request/response payloads).
+- If something looks off, use the working folder in `logs/...` to debug (it includes request/response payloads).
 
 ## Outputs
 
-- Working folder under `temp/fal-veo3-image-to-video/<run-id>/` containing inputs and full request/response logs.
+- Working folder under `logs/fal-veo3-image-to-video/<run-id>/` containing inputs and full request/response logs.
 - Final folder under `artifacts/fal-veo3-image-to-video/<run-id>/` containing:
   - `README.md` (what was generated + where the working logs are)
   - One or more final videos (`video-1.mp4`, etc.)

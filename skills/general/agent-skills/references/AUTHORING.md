@@ -35,7 +35,7 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 
 ### Working folders and naming
 
-- Drafts, logs, intermediate renders, and review copies belong in `temp/<role>/<skill-name>/<task-id>/`.
+- Drafts, logs, intermediate renders, and review copies belong in `logs/<role>/<skill-name>/<task-id>/`.
 - Final deliverables belong in `artifacts/<role>/<skill-name>/<task-id>/`.
 - Prefer a stable `<task-id>` such as a date stamp, slug, or ticket-style identifier.
 - When a skill writes multiple files for one run, include a `README.md` in the task folder that records status and the file list.
@@ -121,12 +121,12 @@ Use these headings so both agents and humans know where to look:
 
 2) `## Workflow`
 - Numbered steps, each with explicit commands and stop points
-- Prefer “generate to `temp/`/`artifacts/` then review” for risky changes
+- Prefer “generate to `logs/`/`artifacts/` then review” for risky changes
 - Call out where the agent must ask for confirmation (e.g. before spending money, deleting files, publishing)
 
 3) `## Outputs`
 - Exact folder(s), filenames, and formats
-- Working/intermediate files go under `temp/`; final deliverables go under `artifacts/`
+- Working/intermediate files go under `logs/`; final deliverables go under `artifacts/`
 - Group each task run into its own subfolder, and include a `README.md` that records status + file list
 
 4) `## Definition of done`
@@ -146,4 +146,4 @@ Recommended “done” workflow after changing a skill:
 2) Sync to the project-local Codex test setup (required): follow `skills/AGENTS.md`
 3) Smoke test:
    - Run any referenced helper scripts with minimal safe inputs (prefer dry-run flags), and/or
-   - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `temp/`/`artifacts/`.
+   - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `logs/`/`artifacts/`.

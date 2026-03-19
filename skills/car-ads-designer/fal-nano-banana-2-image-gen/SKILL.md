@@ -32,7 +32,7 @@ compatibility: Requires Node.js 18+ with internet access and a fal.ai API key in
 
 2) Run
 - Use the bundled script to call fal.ai.
-- **Final deliverables go to `artifacts/`**; request/response logs and intermediate files stay in `temp/`.
+- **Final deliverables go to `artifacts/`**; request/response logs and intermediate files stay in `logs/`.
   - Basic:
     - `node skills/car-ads-designer/fal-nano-banana-2-image-gen/scripts/generate.mjs --prompt "..." --image-size square_hd`
   - Multiple sizes (one call, multiple requests):
@@ -45,11 +45,11 @@ compatibility: Requires Node.js 18+ with internet access and a fal.ai API key in
 
 4) Review outputs
 - Inspect the **final** images under `artifacts/...` first.
-- If something looks off, use the working folder in `temp/...` to debug (it includes request/response payloads).
+- If something looks off, use the working folder in `logs/...` to debug (it includes request/response payloads).
 
 ## Outputs
 
-- Working folder under `temp/fal-nano-banana-2-image-gen/<run-id>/` containing inputs and full request/response logs.
+- Working folder under `logs/fal-nano-banana-2-image-gen/<run-id>/` containing inputs and full request/response logs.
 - Final folder under `artifacts/fal-nano-banana-2-image-gen/<run-id>/` containing:
   - `README.md` (what was generated + where the working logs are)
   - One or more final images (and per-size subfolders when multiple sizes are requested)

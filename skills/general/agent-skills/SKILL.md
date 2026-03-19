@@ -1,6 +1,6 @@
 ---
 name: agent-skills
-description: "Apply SmartWorkers house style when creating or updating repo skills in `skills/<role>/<skill-name>/`. Use when a skill should follow repo conventions for `workers.jsonc`, `temp/` and `artifacts/`, naming, templates, references and scripts layout, or local sync into `.agents/skills/`; pair with `$skill-creator` for drafting, testing, and iteration."
+description: "Apply SmartWorkers house style when creating or updating repo skills in `skills/<role>/<skill-name>/`. Use when a skill should follow repo conventions for `workers.jsonc`, `logs/` and `artifacts/`, naming, templates, references and scripts layout, or local sync into `.agents/skills/`; pair with `$skill-creator` for drafting, testing, and iteration."
 compatibility: "Local filesystem access required. Optional: `skills-ref` for validation."
 ---
 
@@ -31,7 +31,7 @@ Use `$skill-creator` for the generic create, test, evaluate, and improve loop. U
 3. Apply SmartWorkers house rules while editing the skill.
    - Keep routing information primarily in frontmatter `description`, including "Use when..." phrasing and searchable nouns.
    - Put local config requirements in `workers.jsonc`, and document safe placeholders in `workers.example.jsonc` when the structure should be shared.
-   - Put draft and intermediate work in `temp/<role>/<skill-name>/<task-id>/`.
+   - Put draft and intermediate work in `logs/<role>/<skill-name>/<task-id>/`.
    - Put final deliverables in `artifacts/<role>/<skill-name>/<task-id>/`.
    - Keep the skill body lean: essential workflow in `SKILL.md`, heavy material in `references/`, deterministic mechanics in `scripts/`, reusable files in `assets/`.
    - Keep `name` aligned with the folder name and keep `agents/openai.yaml` aligned with the current contract when present.
@@ -39,7 +39,7 @@ Use `$skill-creator` for the generic create, test, evaluate, and improve loop. U
 4. Scaffold safely when a new skill folder is needed.
    - From `skills/general/agent-skills`:
      - `bash scripts/new_skill.sh --role <role> --name <skill-name>`
-   - Preview output goes to `temp/agent-skills/<timestamp>/<role>/<skill-name>/`.
+   - Preview output goes to `logs/agent-skills/<timestamp>/<role>/<skill-name>/`.
    - Use `--apply` only after reviewing the scaffold and making any SmartWorkers-specific adjustments.
 
 5. Validate and sync the final result.
@@ -51,14 +51,14 @@ Use `$skill-creator` for the generic create, test, evaluate, and improve loop. U
 
 - `skills/<role>/<skill-name>/SKILL.md`
 - Optional companion files under `scripts/`, `assets/`, `references/`, and `agents/openai.yaml`
-- Preview scaffolds under `temp/agent-skills/<timestamp>/<role>/<skill-name>/`
+- Preview scaffolds under `logs/agent-skills/<timestamp>/<role>/<skill-name>/`
 - Synced local test copy under `.agents/skills/<skill-name>/`
 
 ## Definition of done
 
 - The skill follows the SmartWorkers template and authoring guide
 - Frontmatter is valid, searchable, and matched to the folder name
-- Config handling, temp and artifact paths, and helper-file layout follow repo conventions
+- Config handling, log and artifact paths, and helper-file layout follow repo conventions
 - `agents/openai.yaml` matches the skill contract when present
 - The finished skill has been synced to `.agents/skills/<skill-name>/` for local testing
 

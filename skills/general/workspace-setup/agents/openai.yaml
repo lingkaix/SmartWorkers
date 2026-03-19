@@ -1,4 +1,4 @@
 interface:
   display_name: "Workspace Setup"
   short_description: "Initialize a SmartWorkers workspace"
-  default_prompt: "Use $workspace-setup to create a SmartWorkers-style workspace with README.md, WORKFLOW.md, AGENTS.md, logs/, temp/, artifacts/, ignore/config defaults, and the mise/uv toolchain baseline."
+  default_prompt: "Use $workspace-setup to create a SmartWorkers-style workspace with README.md, WORKFLOW.md, AGENTS.md, logs/ for working records, temp/ for user scratch, artifacts/, ignore/config defaults, and the mise/uv toolchain baseline."

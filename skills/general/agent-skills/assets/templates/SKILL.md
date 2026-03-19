@@ -26,9 +26,9 @@ Use frontmatter `description` as the main routing field. Keep the body focused o
 3) Stop and request review (required when subjective/high impact)
 - <What to review and what needs explicit approval>
 
-## Temp and output conventions
+## Log and output conventions
 
-- Temp/intermediate: `temp/<role>/<skill-name>/<task-id>/` (drafts, logs, intermediate generations)
+- Working/intermediate: `logs/<role>/<skill-name>/<task-id>/` (drafts, logs, intermediate generations)
 - Final outputs: `artifacts/<role>/<skill-name>/<task-id>/`
 - Each task folder must include a `README.md` that tracks progress and lists files
 

@@ -512,7 +512,7 @@ async function main() {
     ],
     notes: [
       "Do not share secrets from workers.jsonc.",
-      "Working logs stay in temp/; only final images are copied to artifacts/.",
+      "Working logs stay in logs/; only final images are copied to artifacts/.",
     ],
   });
 
@@ -588,7 +588,7 @@ async function main() {
           "If this is an environment restriction, run this script in a network-enabled environment.",
         ],
       });
-      throw new Error(`Error calling fal API (saved temp/.../error.txt): ${msg}`);
+      throw new Error(`Error calling fal API (saved logs/.../error.txt): ${msg}`);
     }
 
     await fs.writeFile(
@@ -612,7 +612,7 @@ async function main() {
     const imageItems = extractImageItems(json);
     if (!imageItems.length) {
       console.log(`Wrote: ${path.join(sizeWorkDir, "result.json")}`);
-      throw new Error(`No images found in response for size "${resolvedSize.detail}". See temp logs for result.json.`);
+      throw new Error(`No images found in response for size "${resolvedSize.detail}". See logs for result.json.`);
     }
 
     for (let i = 0; i < imageItems.length; i++) {
@@ -664,7 +664,7 @@ async function main() {
     ],
     notes: [
       "This folder contains only final images (and this README).",
-      "Full request/response logs are in the working dir under temp/.",
+      "Full request/response logs are in the working dir under logs/.",
     ],
   });
 
@@ -676,4 +676,3 @@ main().catch((err) => {
   console.error(err?.stack || String(err));
   process.exit(1);
 });
-

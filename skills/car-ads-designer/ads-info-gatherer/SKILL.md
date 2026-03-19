@@ -1,7 +1,7 @@
 ---
 name: ads-info-gatherer
 description: Gather dealer car-ad source packs, VIN-anchored retail data, source assets, and review inputs for later ad generation. Use when the user asks to gather ad info online from a dealer site, browse and extract specials-page details, or normalize a user-provided worker-pack folder into the truth set used for car-ad generation and review.
-compatibility: Local filesystem access required. Internet access plus browser/page-interaction tools are required for online gathering. Write working files to `temp/` and final source packs to `artifacts/`.
+compatibility: Local filesystem access required. Internet access plus browser/page-interaction tools are required for online gathering. Write working files to `logs/` and final source packs to `artifacts/`.
 ---
 
 # ads-info-gatherer
@@ -20,7 +20,7 @@ compatibility: Local filesystem access required. Internet access plus browser/pa
 ## Workflow
 
 1. Create a run folder:
-   - Working: `temp/car-ads-designer/ads-info-gatherer/<task-id>/`
+   - Working: `logs/car-ads-designer/ads-info-gatherer/<task-id>/`
    - Final: `artifacts/car-ads-designer/ads-info-gatherer/<task-id>/`
 2. Decide the input mode.
    - For `online-gather`, use browser tools such as web fetch + Playwright-style page interaction to inspect the dealer site and related sources
@@ -72,7 +72,7 @@ compatibility: Local filesystem access required. Internet access plus browser/pa
 - `review-standards.json` — rules later used by the reviewer
 - `README.md` — what was gathered, what is missing, and confidence notes
 
-Write working notes to `temp/car-ads-designer/ads-info-gatherer/<task-id>/` and copy the final pack to `artifacts/car-ads-designer/ads-info-gatherer/<task-id>/`.
+Write working notes to `logs/car-ads-designer/ads-info-gatherer/<task-id>/` and copy the final pack to `artifacts/car-ads-designer/ads-info-gatherer/<task-id>/`.
 
 ## Definition of done
 

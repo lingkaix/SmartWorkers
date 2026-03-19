@@ -42,4 +42,4 @@ Images:
 
 ## Packaged Subaru notes used to derive these rules
 
-These bundled rules were consolidated from the repo's Subaru workflow materials and recovered sample ad data so teammates do not need to depend on any `temp/` files.
+These bundled rules were consolidated from the repo's Subaru workflow materials and recovered sample ad data so teammates do not need to depend on any `logs/` files.

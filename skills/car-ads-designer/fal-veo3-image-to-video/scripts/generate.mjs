@@ -526,7 +526,7 @@ async function main() {
     ],
     notes: [
       "Do not share secrets from workers.jsonc.",
-      "Working logs stay in temp/; only final videos are copied to artifacts/.",
+      "Working logs stay in logs/; only final videos are copied to artifacts/.",
     ],
   });
 
@@ -575,7 +575,7 @@ async function main() {
         "If this is an environment restriction, run this script in a network-enabled environment.",
       ],
     });
-    throw new Error(`Error calling fal API (saved temp/.../error.txt): ${msg}`);
+    throw new Error(`Error calling fal API (saved logs/.../error.txt): ${msg}`);
   }
 
   await fs.writeFile(
@@ -660,7 +660,7 @@ async function main() {
     ],
     notes: [
       "This folder contains only final videos (and this README).",
-      "Full request/response logs are in the working dir under temp/.",
+      "Full request/response logs are in the working dir under logs/.",
     ],
   });
 
@@ -672,4 +672,3 @@ main().catch((err) => {
   console.error(err?.stack || String(err));
   process.exit(1);
 });
-

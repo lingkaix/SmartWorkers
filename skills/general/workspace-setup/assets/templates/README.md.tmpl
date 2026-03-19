@@ -14,11 +14,11 @@ Use this workspace when you want an AI agent to complete tasks like:
 
 ## Where work goes
 
-- `temp/` — scratch work (drafts, logs, intermediate files). Safe to delete.
+- `logs/` — scratch work (drafts, logs, intermediate files). Safe to delete.
 - `artifacts/` — final deliverables you can review and share.
 
 Tip: each agent run should create matching folders under both:
-`temp/<task>/<run-id>/` and `artifacts/<task>/<run-id>/`.
+`logs/<task>/<run-id>/` and `artifacts/<task>/<run-id>/`.
 
 ## Secrets and configuration (important)
 
@@ -35,18 +35,20 @@ This workspace uses `mise` to manage tool versions (Node/Python/uv).
 
 ```sh
 mise install
+mise exec -- npm i skills -g
+mise exec -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator
 mise tasks run setup
 ```
 
-If you don’t know what this means, ask a technical teammate to run the two commands above once — after that, you can focus on tasks and reviewing outputs.
+This bootstraps the workspace runtimes, installs the `skills` CLI, and installs the `skill-creator` skill for Codex. If you don’t know what this means, ask a technical teammate to run the commands above once — after that, you can focus on tasks and reviewing outputs.
 
 ## How to use with Codex
 
-1) Install the worker skill(s) you want into `.codex/skills/` (ask whoever provided the worker library).
+1) Add skills with `npx skills add -a codex -y <repo-or-skill-url>`.
 2) Open Codex in this folder.
-3) Ask for a task and specify outputs, for example:
+3) Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you want to create or update a skill in this workspace.
+4) Ask for a task and specify outputs, for example:
 
-> Output: write drafts to `temp/<task>/<run-id>/` and final deliverables to `artifacts/<task>/<run-id>/`.
+> Output: write drafts to `logs/<task>/<run-id>/` and final deliverables to `artifacts/<task>/<run-id>/`.
 
 See `AGENTS.md` for the detailed rules the agent follows.
-

@@ -3,10 +3,12 @@
 # SmartWorkers / agent workspaces
 workers.jsonc
 .codex/
+.agents/
+skills-lock.json
 
 # Ignore scratch + deliverables by default, but keep folder rules tracked
-temp/**
-!temp/AGENTS.md
+logs/**
+!logs/AGENTS.md
 artifacts/**
 !artifacts/AGENTS.md
 

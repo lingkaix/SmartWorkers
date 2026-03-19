@@ -14,24 +14,25 @@ Usage:
 
 Options:
   --repo PATH         Repo root (default: .)
-  --apply             Write into repo root (default: generate into temp/)
+  --apply             Write into repo root (default: generate into logs/)
   --node VERSION      Node version for mise (default: 24)
   --python VERSION    Python version for mise (default: 3.14)
   --bun VERSION       Bun version for mise (default: latest)
   --uv VERSION        uv version for mise (default: latest)
-  --install           Run `mise install` after applying (requires mise)
+  --install           Run `mise install`, `npm i skills -g`, and install `skill-creator` for Codex (requires mise)
   --uv-sync           Run `uv venv --seed` then `uv sync` (requires uv)
   -h, --help          Show help
 
 Notes:
-  - Without --apply, files are written to temp/workspace-setup/ for review.
+  - Without --apply, files are written to logs/workspace-setup/ for review.
   - With --apply, existing files are never overwritten.
   - Generates the baseline workspace skeleton:
     - repo root: AGENTS.md (workspace policy)
-    - temp/: temp/AGENTS.md (scratch rules)
+    - logs/: logs/AGENTS.md (scratch rules)
     - artifacts/: artifacts/AGENTS.md (deliverables rules)
     - README.md, .gitignore, .ignore, workers.example.jsonc
     - .mise.toml, package.json, pyproject.toml
+  - With --install, the script also installs the `skills` CLI globally and adds `skill-creator` to Codex for this workspace.
   - With --apply, this script refuses to run if the repo already has an AGENTS.md. Create a new empty folder for a new workspace.
 EOF
 }
@@ -41,6 +42,7 @@ node_version="24"
 python_version="3.14"
 bun_version="latest"
 uv_version="latest"
+skill_creator_url="https://github.com/anthropics/skills/tree/main/skills/skill-creator"
 apply="false"
 do_install="false"
 do_uv_sync="false"
@@ -143,7 +145,7 @@ generate_ignore_for_workdirs() {
 #
 # Codex (and some tooling) uses ignore files to decide which files are visible/searchable.
 # This workspace's `.gitignore` may intentionally ignore paths the agent still needs to
-# recognize (e.g. `workers.jsonc`, `temp/`, `artifacts/`). This `.ignore` file re-includes
+# recognize (e.g. `workers.jsonc`, `logs/`, `artifacts/`). This `.ignore` file re-includes
 # the essential working paths for agent runs and deliverables.
 #
 # NOTE: Visibility is not permission — avoid reading secrets unless the task requires it.
@@ -152,8 +154,8 @@ EOF
   echo
   cat <<'EOF'
 !workers.jsonc
-!temp/
-!temp/**
+!logs/
+!logs/**
 !artifacts/
 !artifacts/**
 EOF
@@ -172,7 +174,7 @@ if [[ "$apply" == "true" ]]; then
   fi
   out_dir="$repo"
 else
-  out_dir="$repo/temp/workspace-setup"
+  out_dir="$repo/logs/workspace-setup"
 fi
 
 mkdir -p "$out_dir"
@@ -187,11 +189,11 @@ pyproject_target="$out_dir/pyproject.toml"
 
 if [[ "$apply" == "true" ]]; then
   workspace_agents_target="$repo/AGENTS.md"
-  temp_agents_target="$repo/temp/AGENTS.md"
+  temp_agents_target="$repo/logs/AGENTS.md"
   artifacts_agents_target="$repo/artifacts/AGENTS.md"
 else
   workspace_agents_target="$out_dir/AGENTS.md"
-  temp_agents_target="$out_dir/temp.AGENTS.md"
+  temp_agents_target="$out_dir/logs.AGENTS.md"
   artifacts_agents_target="$out_dir/artifacts.AGENTS.md"
 fi
 
@@ -235,12 +237,12 @@ render_template "$assets_dir/pyproject.toml.tmpl" \
   | write_if_missing "$pyproject_target" "pyproject.toml"
 
 if [[ "$apply" == "true" ]]; then
-  mkdir -p "$repo/temp" "$repo/artifacts"
+  mkdir -p "$repo/logs" "$repo/artifacts"
 fi
 
 generate_workspace_root_agents_md | write_if_missing "$workspace_agents_target" "AGENTS.md"
 
-generate_folder_agents_md "temp.AGENTS.md.tmpl" | write_if_missing "$temp_agents_target" "temp/AGENTS.md"
+generate_folder_agents_md "logs.AGENTS.md.tmpl" | write_if_missing "$temp_agents_target" "logs/AGENTS.md"
 generate_folder_agents_md "artifacts.AGENTS.md.tmpl" | write_if_missing "$artifacts_agents_target" "artifacts/AGENTS.md"
 
 if [[ "$apply" == "false" ]]; then
@@ -261,6 +263,8 @@ if [[ "$do_install" == "true" ]]; then
     exit 1
   fi
   (cd "$repo" && mise install)
+  (cd "$repo" && mise exec -- npm i skills -g)
+  (cd "$repo" && mise exec -- npx skills add -a codex -y "$skill_creator_url")
 fi
 
 if [[ "$do_uv_sync" == "true" ]]; then

@@ -1,13 +1,13 @@
-# temp/ (scratch)
+# logs/ (scratch)
 
-`temp/` is scratch space for intermediate files and can be deleted at any time.
+`logs/` is scratch space for intermediate files and can be deleted at any time.
 
 Rules:
 
 - Put intermediate/working files here (not final deliverables).
-- Use per-task subfolders: `temp/<short-desc>/<run-folder>/`.
+- Use per-task subfolders: `logs/<short-desc>/<run-folder>/`.
 - `run-folder` naming (local time): `YYYYMMDD-HHMMSS-<epochMs>-<short-desc>`.
-  - Example: `temp/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/`.
+  - Example: `logs/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/`.
 - When you produce deliverables, create the matching folder under `artifacts/<short-desc>/<run-folder>/` with the exact same `run-folder` name.
 - Each run folder must include a `README.md` that records progress and lists produced files.
-- Keep `temp/AGENTS.md` tracked in git even if `temp/` is ignored.
+- Keep `logs/AGENTS.md` tracked in git even if `logs/` is ignored.

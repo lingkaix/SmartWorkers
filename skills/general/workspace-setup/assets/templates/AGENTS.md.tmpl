@@ -5,7 +5,7 @@ This file is for agent runners and maintainers of this workspace. It defines how
 ## Workspace goals
 
 - Produce reviewable deliverables in `artifacts/`.
-- Keep intermediate work in `temp/`.
+- Keep intermediate work in `logs/`.
 - Keep secrets out of git and out of chat transcripts.
 - Keep procedures repeatable (write down what you did, where outputs are, and what assumptions you made).
 
@@ -23,6 +23,14 @@ This workspace uses `mise` to manage runtimes and coding tools (see the repo’s
   - Install runtimes via `mise install` (or the repo’s `mise` tasks).
   - Install Node deps with `npm` in this repo (avoid global installs).
   - Install/sync Python deps with `uv` (`uv venv --seed`, `uv sync`; avoid global `pip install`).
+
+## Skill installation and authoring policy
+
+- This workspace uses the `skills` CLI for project-scoped skill installs and updates.
+- Use `npx skills add -a codex -y <repo-or-skill-url>` when adding or refreshing skills for Codex.
+- Do not manually copy skill folders into the repo, and do not use `--all` for normal workspace setup; target `codex` explicitly so installs stay reproducible and scoped to this workspace.
+- Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you need to create or update a skill.
+- If `skill-creator` is missing, install it with `npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`.
 
 ## Secret and config policy
 
@@ -76,21 +84,21 @@ Once a user has specified a skill (or you have decided to use one) and you are r
 
 ## Output locations
 
-- Put intermediate/working files under `temp/`.
+- Put intermediate/working files under `logs/`.
 - Put final deliverables under `artifacts/`.
-- Group each task run into a dedicated subfolder under both `temp/` and `artifacts/`, and keep the run folder name identical in both places.
+- Group each task run into a dedicated subfolder under both `logs/` and `artifacts/`, and keep the run folder name identical in both places.
   - Use this naming format (local time): `YYYYMMDD-HHMMSS-<epochMs>-<short-desc>`
-  - Example: `artifacts/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/` (and the matching `temp/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/`)
-- If you create one-off scripts or temporary resources for a task, put them inside that task’s `temp/<short-desc>/<run-folder>/` subfolder (not as new top-level folders in the repo root).
-- Each task subfolder in `temp/` or `artifacts/` must include a `README.md` that records progress and lists files.
+  - Example: `artifacts/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/` (and the matching `logs/subaru-brz-ads/20260301-212955-1709309395257-subaru-brz-ads/`)
+- If you create one-off scripts or temporary resources for a task, put them inside that task’s `logs/<short-desc>/<run-folder>/` subfolder (not as new top-level folders in the repo root).
+- Each task subfolder in `logs/` or `artifacts/` must include a `README.md` that records progress and lists files.
 - When you complete a task (success or failure), provide a short report: result/status, delivered outputs (paths), the process you followed, and evaluation/suggestions for next steps.
 
 ## Workspace skeleton (required files/folders)
 
 When setting up or polishing a workspace, ensure these key folders exist and are documented with local rules:
 
-- `temp/` (scratch, can be deleted anytime)
-  - Must contain `temp/AGENTS.md` describing usage, restrictions, and what belongs here.
+- `logs/` (scratch, can be deleted anytime)
+  - Must contain `logs/AGENTS.md` describing usage, restrictions, and what belongs here.
 - `artifacts/` (final deliverables)
   - Must contain `artifacts/AGENTS.md` describing what counts as a deliverable, expected structure, and any restrictions.
 

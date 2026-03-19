@@ -1,6 +1,6 @@
 ---
 name: workspace-setup
-description: "Initialize a SmartWorkers-style **agent workspace** for any kind of work (sales, ops, recruiting, creative, research, software): generates a reviewable workspace skeleton (`README.md`, `AGENTS.md`, `logs/`, `artifacts/`, `.gitignore`, `.ignore`, `workers.example.jsonc`) and a required code-execution toolchain baseline (`.mise.toml`, `pyproject.toml`, `package.json`) via `mise` + `uv`."
+description: "Initialize a SmartWorkers-style **agent workspace** for any kind of work (sales, ops, recruiting, creative, research, software): generates a reviewable workspace skeleton (`README.md`, `WORKFLOW.md`, `AGENTS.md`, `logs/`, `artifacts/`, `.gitignore`, `.ignore`, `workers.example.jsonc`) and a required code-execution toolchain baseline (`.mise.toml`, `pyproject.toml`, `package.json`) via `mise` + `uv`."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access typically required for mise/uv runtime downloads."
 ---
 
@@ -37,6 +37,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
    - Alternative (from repo root): `bash skills/general/workspace-setup/scripts/init_workspace.sh`
    - This generates:
      - `README.md` (non-technical overview + how to use the workspace)
+     - `WORKFLOW.md` (simple user-maintained playbook for repeatable workflows; agents should consult it when the user says `work work`)
      - `AGENTS.md` (workspace policy)
      - `logs/AGENTS.md` and `artifacts/AGENTS.md` (folder-local rules)
      - `.gitignore` (keeps `workers.jsonc` untracked; ignores `logs/**` + `artifacts/**` but re-includes their `AGENTS.md`)
@@ -59,15 +60,16 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 
 ## Assets
 
-- Template files live in `assets/templates/` and are rendered by `scripts/init_workspace.sh`:
-  - `.mise.toml.tmpl`
-  - `package.json.tmpl`
-  - `pyproject.toml.tmpl`
-  - `gitignore.recommended`
-  - `workers.example.jsonc.tmpl`
-  - `AGENTS.md.tmpl`
-  - `logs.AGENTS.md.tmpl`
-  - `artifacts.AGENTS.md.tmpl`
+  - Template files live in `assets/templates/` and are rendered by `scripts/init_workspace.sh`:
+    - `.mise.toml.tmpl`
+    - `package.json.tmpl`
+    - `pyproject.toml.tmpl`
+    - `gitignore.recommended`
+    - `workers.example.jsonc.tmpl`
+    - `WORKFLOW.md.tmpl`
+    - `AGENTS.md.tmpl`
+    - `logs.AGENTS.md.tmpl`
+    - `artifacts.AGENTS.md.tmpl`
 
 5) Install toolchain and bootstrap skill management (required for code execution)
 
@@ -94,6 +96,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 ## Outputs
 
 - `README.md` (non-technical overview + how to use the workspace)
+- `WORKFLOW.md` (user-maintained recurring workflow guide; triggered by the phrase `work work`)
 - `.mise.toml` (tool versions + helper tasks)
 - `.gitignore` (workspace ignore patterns; generated candidate if one already exists)
 - `.ignore` (Codex file-visibility overrides; re-includes working folders like `logs/` and `artifacts/`)
@@ -109,6 +112,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 ## Definition of done
 
 - `README.md` exists in the workspace root and is readable by non-technical users
+- `WORKFLOW.md` exists in the workspace root and gives the user a simple way to define recurring workflows
 - `AGENTS.md` exists in the workspace root and is readable by humans
 - `logs/` exists and contains `logs/AGENTS.md`
 - `artifacts/` exists and contains `artifacts/AGENTS.md`

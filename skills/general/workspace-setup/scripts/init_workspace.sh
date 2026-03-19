@@ -30,7 +30,7 @@ Notes:
     - repo root: AGENTS.md (workspace policy)
     - logs/: logs/AGENTS.md (scratch rules)
     - artifacts/: artifacts/AGENTS.md (deliverables rules)
-    - README.md, .gitignore, .ignore, workers.example.jsonc
+    - README.md, WORKFLOW.md, .gitignore, .ignore, workers.example.jsonc
     - .mise.toml, package.json, pyproject.toml
   - With --install, the script also installs the `skills` CLI globally and adds `skill-creator` to Codex for this workspace.
   - With --apply, this script refuses to run if the repo already has an AGENTS.md. Create a new empty folder for a new workspace.
@@ -183,6 +183,7 @@ gitignore_target="$out_dir/.gitignore"
 ignore_target="$out_dir/.ignore"
 workers_example_target="$out_dir/workers.example.jsonc"
 readme_target="$out_dir/README.md"
+workflow_target="$out_dir/WORKFLOW.md"
 mise_toml_target="$out_dir/.mise.toml"
 package_json_target="$out_dir/package.json"
 pyproject_target="$out_dir/pyproject.toml"
@@ -223,6 +224,10 @@ render_template "$assets_dir/workers.example.jsonc.tmpl" \
 render_template "$assets_dir/README.md.tmpl" \
   "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
   | write_if_missing "$readme_target" "README.md"
+
+render_template "$assets_dir/WORKFLOW.md.tmpl" \
+  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  | write_if_missing "$workflow_target" "WORKFLOW.md"
 
 render_template "$assets_dir/.mise.toml.tmpl" \
   "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \

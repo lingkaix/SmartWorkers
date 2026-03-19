@@ -9,6 +9,13 @@ This file is for agent runners and maintainers of this workspace. It defines how
 - Keep secrets out of git and out of chat transcripts.
 - Keep procedures repeatable (write down what you did, where outputs are, and what assumptions you made).
 
+## Workflow trigger
+
+- If the user says `work work`, read `WORKFLOW.md` before doing anything substantial.
+- Treat `WORKFLOW.md` as the user-maintained playbook for recurring tasks, preferences, and decision rules in this workspace.
+- Follow the workflow that best matches the request. If multiple workflows could apply, choose the closest match and say which one you used.
+- If `WORKFLOW.md` is missing, too vague, or does not cover the request, say so briefly and continue with the normal workspace rules in this file.
+
 ## Runtime and toolchain policy
 
 This workspace uses `mise` to manage runtimes and coding tools (see the repo’s `.mise.toml`).

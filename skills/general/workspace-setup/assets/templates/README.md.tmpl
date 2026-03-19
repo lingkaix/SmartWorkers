@@ -46,8 +46,10 @@ This bootstraps the workspace runtimes, installs the `skills` CLI, and installs 
 
 1) Add skills with `npx skills add -a codex -y <repo-or-skill-url>`.
 2) Open Codex in this folder.
-3) Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you want to create or update a skill in this workspace.
-4) Ask for a task and specify outputs, for example:
+3) Update `WORKFLOW.md` when you have recurring ways of working you want the agent to follow.
+4) Say `work work` when you want Codex to consult `WORKFLOW.md` before starting.
+5) Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you want to create or update a skill in this workspace.
+6) Ask for a task and specify outputs, for example:
 
 > Output: write drafts to `logs/<task>/<run-id>/` and final deliverables to `artifacts/<task>/<run-id>/`.
 

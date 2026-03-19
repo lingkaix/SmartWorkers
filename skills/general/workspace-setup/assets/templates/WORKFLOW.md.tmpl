@@ -1,0 +1,56 @@
+# Workflow Guide
+
+This file is owned by the workspace user. Keep it short, practical, and up to date.
+
+## How to use this file
+
+- Say `work work` in your request when you want the agent to consult this file first.
+- Add recurring workflows, preferences, approval steps, and handoff rules here.
+- Prefer simple checklists and examples over long prose.
+- Update this file whenever the team changes how work should be done.
+
+## Suggested format
+
+### Trigger
+- What kinds of requests should use this workflow.
+
+### Steps
+1. First action.
+2. Main work sequence.
+3. How to finish and report back.
+
+### Inputs
+- Files, links, accounts, or context the agent should check first.
+
+### Outputs
+- Where drafts go.
+- Where final deliverables go.
+- What the final report should include.
+
+### Guardrails
+- Approval requirements.
+- Things to avoid.
+- Escalation rules.
+
+## Example workflow
+
+### Trigger
+- Weekly reporting requests.
+
+### Steps
+1. Read the most recent files in `logs/weekly-report/`.
+2. Draft the new report in `logs/weekly-report/<run-id>/`.
+3. Save the final deliverable in `artifacts/weekly-report/<run-id>/`.
+4. Report what changed, what data was used, and any open questions.
+
+### Inputs
+- Source spreadsheet link.
+- Last week's report.
+
+### Outputs
+- Draft analysis in `logs/`.
+- Final report in `artifacts/`.
+
+### Guardrails
+- Never publish numbers without citing the source file.
+- Ask before changing the report format.

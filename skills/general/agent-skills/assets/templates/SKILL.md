@@ -6,10 +6,7 @@ compatibility: "<E.g. Local filesystem required. macOS/Linux. Internet required 
 
 # <Skill display name>
 
-## When to use
-
-- <Trigger 1 in the user’s words>
-- <Trigger 2 / synonym>
+Use frontmatter `description` as the main routing field. Keep the body focused on SmartWorkers-style inputs, workflow, outputs, and safety.
 
 ## Required inputs
 
@@ -57,4 +54,3 @@ compatibility: "<E.g. Local filesystem required. macOS/Linux. Internet required 
 - Do not paste/print keys from `workers.jsonc`; only confirm whether values are present.
 - Validate outputs (spot-check, diff, sampling).
 - Confirm before destructive or paid actions.
-

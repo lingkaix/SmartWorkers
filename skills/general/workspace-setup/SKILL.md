@@ -1,136 +1,116 @@
 ---
 name: workspace-setup
-description: "Initialize a SmartWorkers-style **agent workspace** for any kind of work (sales, ops, recruiting, creative, research, software): generates a reviewable workspace skeleton (`README.md`, `WORKFLOW.md`, `AGENTS.md`, `logs/`, `temp/`, `artifacts/`, `.gitignore`, `.ignore`, `workers.example.jsonc`) and a required code-execution toolchain baseline (`.mise.toml`, `pyproject.toml`, `package.json`) via `mise` + `uv`."
-compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access typically required for mise/uv runtime downloads."
+description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, ignore rules, config templates, and a `mise` plus `uv` toolchain baseline. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and runtime setup before adding more skills or automation."
+compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access is typically required for `mise` and `uv` downloads."
 ---
 
-# Workspace setup (agent workspace + required toolchain)
+# Workspace Setup
 
 ## Required inputs
 
-- Repo root path (default: current working directory)
-- Whether to **apply** changes to the repo root or generate to `logs/` for review first (recommended)
-- Target tool versions (defaults: Node `24`, Python `3.14`, Bun `latest`, uv `latest`)
-- OS/shell constraints (macOS/Linux; Windows requires WSL2)
-- Whether internet access is allowed (mise/uv typically download tool artifacts)
+- Repo root path, defaulting to the current working directory
+- Whether to generate a preview under `logs/workspace-setup/` first or apply directly to the repo root
+- Tool version constraints when the defaults are not acceptable:
+  - Node `24`
+  - Python `3.14`
+  - Bun `latest`
+  - uv `latest`
+- OS and shell constraints, especially whether the environment is macOS, Linux, or Windows via WSL2
+- Whether networked installs are allowed, because `mise install`, `npm i`, and `uv` bootstrap steps typically download dependencies
+- Whether the goal is a brand-new workspace or a partial/manual adoption into an existing repo
 
 ## Workflow
 
-1) Ensure workspace-root agent guidance is present and up to date:
+1. Confirm that this skill is the right tool for the target folder.
+   - This initializer is for a new SmartWorkers-style workspace.
+   - If the target repo already has a workspace-root `AGENTS.md`, do not force `--apply`; either create a new empty folder and rerun with `--repo <new-folder>`, or switch to manual adoption of only the pieces the user wants.
 
-   - If the repo **already has** a workspace-root `AGENTS.md`, **stop** and create a **new empty folder** for the new workspace; then re-run this skill with `--repo <new-folder>`.
-   - If the repo does **not** have `AGENTS.md`, `scripts/init_workspace.sh --apply` will create it from `assets/templates/AGENTS.md.tmpl` (never overwriting existing files).
-   - All important workspace rules and details must live in the workspace-root `AGENTS.md` (don’t leave critical policy only in skill docs or references).
-
-2) Ensure key workspace folders and local rules exist:
-
-   - Confirm `logs/` exists and contains `logs/AGENTS.md`.
-   - Confirm `temp/` exists and contains `temp/AGENTS.md`.
-   - Confirm `artifacts/` exists and contains `artifacts/AGENTS.md`.
-   - Ensure these per-folder `AGENTS.md` files are tracked in git even if the rest of the folder is ignored.
-   - `scripts/init_workspace.sh` will (when applying) create `logs/AGENTS.md`, `temp/AGENTS.md`, and `artifacts/AGENTS.md` if missing (never overwriting existing ones).
-
-3) Generate baseline workspace files (safe default: write to `logs/`):
-
+2. Choose preview mode first unless the user explicitly wants direct application.
+   - From the repo root:
+     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path>`
    - From the skill folder:
-     - `cd skills/general/workspace-setup`
-     - `bash scripts/init_workspace.sh`
-   - Alternative (from repo root): `bash skills/general/workspace-setup/scripts/init_workspace.sh`
-   - This generates:
-     - `README.md` (non-technical overview + how to use the workspace)
-     - `WORKFLOW.md` (simple user-maintained playbook for repeatable workflows; agents should consult it when the user says `work work`)
-     - `AGENTS.md` (workspace policy)
-     - `logs/AGENTS.md`, `temp/AGENTS.md`, and `artifacts/AGENTS.md` (folder-local rules)
-     - `.gitignore` (keeps `workers.jsonc` untracked; ignores `logs/**`, `temp/**`, and `artifacts/**` but re-includes their `AGENTS.md`)
-     - `.ignore` (re-includes `logs/`, `temp/`, and `artifacts/` for agent visibility even when `.gitignore` hides them)
-     - `workers.example.jsonc` (copy to `workers.jsonc` locally; never commit secrets)
-     - `.mise.toml`, `package.json`, `pyproject.toml` (required toolchain baseline for running helper scripts and automation)
-   - Review what was generated in `logs/workspace-setup/` before applying.
+     - `bash scripts/init_workspace.sh --repo <path>`
+   - Without `--apply`, the script writes reviewable output to `logs/workspace-setup/`.
 
-4) Apply to the repo root when ready:
+3. Review the generated workspace skeleton before applying it.
+   - The initializer can generate:
+     - `README.md` for a non-technical overview of the workspace and how to use it
+     - `WORKFLOW.md` for recurring workflows the user wants agents to follow
+     - `AGENTS.md` for workspace-root agent guidance and policy
+     - `logs/AGENTS.md` for rules on agent scratch output
+     - `temp/AGENTS.md` for rules on user-managed temporary files
+     - `artifacts/AGENTS.md` for rules on deliverables and final outputs
+     - `.gitignore` to keep local-only and generated files out of git while preserving tracked guidance files
+     - `.ignore` to keep important working folders visible to the agent even when `.gitignore` hides them
+     - `workers.example.jsonc` as a safe config template the user can copy into local `workers.jsonc`
+     - `.mise.toml` for runtime versions and helper tasks
+     - `package.json` for the Node workspace manifest
+     - `pyproject.toml` for the Python project manifest used by `uv`
+   - Make sure the generated files fit the user's project, especially the guidance in `AGENTS.md`, the workflow framing in `WORKFLOW.md`, and the ignore behavior in `.gitignore` and `.ignore`.
 
-   - From the skill folder:
-     - `cd skills/general/workspace-setup`
-     - `bash scripts/init_workspace.sh --apply`
-   - Alternative (from repo root): `bash skills/general/workspace-setup/scripts/init_workspace.sh --apply`
-   - With `--apply`, the script never overwrites existing files.
-   - If any of those files already exist, generate to `logs/workspace-setup/` first, then:
-     - **Backup** the current file (keep it under `logs/workspace-setup/backups/`).
-     - **Merge** the generated file into the existing one, **always respecting existing values** (treat generated as defaults; only add missing keys/sections/lines).
-     - Replace the repo-root file with the merged result.
+4. Apply only when the target is ready.
+   - Run:
+     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --apply`
+   - The script never overwrites existing files.
+   - If a file already exists and the repo should still adopt the workspace conventions, generate the preview first, back up the current file under `logs/workspace-setup/backups/`, then merge in the missing sections manually while preserving existing project-specific content.
 
-## Assets
-
-  - Template files live in `assets/templates/` and are rendered by `scripts/init_workspace.sh`:
-    - `mise.toml.tmpl`
-    - `package.json.tmpl`
-    - `pyproject.toml.tmpl`
-    - `gitignore.recommended`
-    - `workers.example.jsonc.tmpl`
-    - `WORKFLOW.md.tmpl`
-    - `AGENTS.md.tmpl`
-    - `logs.AGENTS.md.tmpl`
-    - `temp.AGENTS.md.tmpl`
-    - `artifacts.AGENTS.md.tmpl`
-
-5) Install toolchain and bootstrap skill management (required for code execution)
-
-   - Ensure `mise` is installed and activated (shell hook) per https://mise.jdx.dev/getting-started.html
-   - Then run one of:
+5. Install runtimes and bootstrap tooling only with clear approval.
+   - Networked setup options:
+     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --apply --install --uv-sync`
      - `mise install`
-     - `mise exec -- npm i skills -g`
-     - `mise exec -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
-     - `mise tasks run setup` (installs runtimes and bootstraps Python via uv)
-   - Or let the initializer run it (only when applying):
-     - `bash scripts/init_workspace.sh --apply --install --uv-sync`
-   - Use `npx skills add -a codex -y <repo-or-skill-url>` as the default way to install or update skills in the workspace.
-   - Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you need to create or update skills.
+     - `mise tasks run setup`
+   - The script's `--install` path installs runtimes, globally installs the `skills` CLI, and adds `skill-creator` for local Codex use.
+   - Use this step when the user wants a runnable automation baseline, not just the file scaffold.
 
-## Automation vs manual edits
+6. Report what was created, skipped, or left for manual follow-up.
+   - Call out any files that were skipped because they already existed.
+   - If the workspace was only previewed, point the user to `logs/workspace-setup/`.
+   - If the workspace was applied, confirm the repo-root files and per-folder `AGENTS.md` files now exist where expected.
 
-- Prefer `scripts/init_workspace.sh` when you want a fast, deterministic baseline workspace skeleton for agent work plus a runnable toolchain.
-- Prefer manual edits when the workspace already has policies/structure and you only want to adopt parts of the conventions.
+## Temp and output conventions
 
-## Troubleshooting
-
-- If any setup step fails: stop, clean the workspace, and report the failure in plain language with exact commands/log output and next-step suggestions.
+- Preview output goes to `logs/workspace-setup/`.
+- Manual merge backups should live under `logs/workspace-setup/backups/`.
+- Applied workspace files live at the repo root plus `logs/`, `temp/`, and `artifacts/`.
 
 ## Outputs
 
-- `README.md` (non-technical overview + how to use the workspace)
-- `WORKFLOW.md` (user-maintained recurring workflow guide; triggered by the phrase `work work`)
-- `.mise.toml` (tool versions + helper tasks)
-- `.gitignore` (workspace ignore patterns; generated candidate if one already exists)
-- `.ignore` (Codex file-visibility overrides; re-includes working folders like `logs/`, `temp/`, and `artifacts/`)
-- `AGENTS.md` (workspace-root agent rules)
-- `workers.example.jsonc` (example config; do not put real keys here)
-- `package.json` (Node workspace manifest)
-- `pyproject.toml` (Python deps; uv reads/writes this)
-- `logs/workspace-setup/` (generated previews when not using `--apply`)
-  - After you apply, `AGENTS.md` should live at the workspace root (not under `logs/`).
-- `logs/AGENTS.md` (rules for scratch outputs)
-- `temp/AGENTS.md` (rules for user-managed temporary files)
-- `artifacts/AGENTS.md` (rules for deliverables)
+- Repo-root guidance and setup files:
+  - `README.md`
+  - `WORKFLOW.md`
+  - `AGENTS.md`
+  - `.gitignore`
+  - `.ignore`
+  - `workers.example.jsonc`
+  - `.mise.toml`
+  - `package.json`
+  - `pyproject.toml`
+- Folder-local guidance:
+  - `logs/AGENTS.md`
+  - `temp/AGENTS.md`
+  - `artifacts/AGENTS.md`
+- `logs/workspace-setup/` for generated previews when not applying directly
+
+## Defaults & rules
+
+- Default to preview mode for safety and reviewability.
+- Treat this as a new-workspace initializer, not a blind in-place upgrader for mature repos.
+- Keep real secrets in `workers.jsonc`; `workers.example.jsonc` should stay safe to commit.
+- Prefer the script for deterministic setup, and manual edits when the user only wants part of the convention set.
+- Ask before running install steps that download dependencies or modify the local runtime environment.
 
 ## Definition of done
 
-- `README.md` exists in the workspace root and is readable by non-technical users
-- `WORKFLOW.md` exists in the workspace root and gives the user a simple way to define recurring workflows
-- `AGENTS.md` exists in the workspace root and is readable by humans
-- `logs/` exists and contains `logs/AGENTS.md`
-- `temp/` exists and contains `temp/AGENTS.md`
-- `artifacts/` exists and contains `artifacts/AGENTS.md`
-- `.ignore` exists in the repo root
-- `.gitignore` exists and keeps `workers.jsonc` untracked
-- `workers.example.jsonc` exists and documents how to create `workers.jsonc`
-- `mise --version` works and `mise install` succeeds
-- `node -v` reports `v24.x` (or your chosen version)
-- `python --version` reports `3.14.x` (or your chosen version)
+- In preview mode, `logs/workspace-setup/` contains a complete candidate workspace skeleton ready for review
+- In apply mode, the repo root has `README.md`, `WORKFLOW.md`, `AGENTS.md`, `.gitignore`, `.ignore`, `workers.example.jsonc`, `.mise.toml`, `package.json`, and `pyproject.toml` unless intentionally skipped because matching files already existed
+- `logs/`, `temp/`, and `artifacts/` exist with their corresponding `AGENTS.md` files
+- The generated files accurately reflect the user's tool-version and workspace-structure constraints
+- If install steps were requested, the required runtime bootstrap commands completed successfully or failures were reported clearly with next steps
 
 ## Safety / quality checklist
 
-- Do not overwrite existing `.mise.toml` or `pyproject.toml` without reviewing diffs.
-- Do not add secrets to `workers.example.jsonc`, `pyproject.toml`, or `.mise.toml`.
-- `.ignore` changes agent visibility; do not read/print secrets unless explicitly required.
-- Keep generated outputs in `logs/` unless intentionally applying to the repo.
-- Reserve `temp/` for user-kept temporary files unless the user explicitly asks the agent to write there.
+- Do not overwrite existing repo files without review; use preview output plus manual merge when a repo already has its own structure.
+- Do not put secrets in `workers.example.jsonc`, `.mise.toml`, `package.json`, or `pyproject.toml`.
+- `.ignore` changes what the agent can see; avoid reading or printing secret material unless the task truly requires it.
+- Keep generated preview files under `logs/` unless the user explicitly wants the workspace applied.
+- Treat toolchain installation as a separate approval point because it downloads software and changes the local environment.

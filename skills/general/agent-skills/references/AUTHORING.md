@@ -9,6 +9,14 @@ Use `https://github.com/openai/skills` as the default style reference for exampl
 
 In this repo, a **worker** is a **role** plus a curated set of skills that role uses. Optimizing skills for maintainers means optimizing the edit → validate → test loop.
 
+## Ownership split
+
+- Use `$skill-creator` for the general skill lifecycle: draft, test, compare, improve, and tune descriptions.
+- Use `skills/general/agent-skills/SKILL.md` for SmartWorkers-specific house rules that `$skill-creator` would not know by default.
+- Use this document as the canonical SmartWorkers authoring reference.
+- Use `skills/general/agent-skills/assets/templates/SKILL.md` as the default scaffold.
+- Keep `skills/AGENTS.md` short and operational. It should point maintainers at this guide and define local sync behavior, not duplicate the full style guide.
+
 ## Directory + naming
 
 - Skill root: `skills/<role>/<skill-name>/`
@@ -16,6 +24,34 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 - Optional helpers: `scripts/` (deterministic automation), `assets/` (templates), `references/` (heavy docs)
 - `name` in frontmatter must match `<skill-name>` exactly.
 - Start from the template when possible: `skills/general/agent-skills/assets/templates/SKILL.md`
+
+## SmartWorkers house rules
+
+### Config and secrets
+
+- Put local config, credentials, and API keys in `workers.jsonc`.
+- If the config structure should be shared, document the shape in `workers.example.jsonc` instead of committing real values.
+- In the skill body, name the required `workers.jsonc` keys but never print or paste their values.
+
+### Working folders and naming
+
+- Drafts, logs, intermediate renders, and review copies belong in `temp/<role>/<skill-name>/<task-id>/`.
+- Final deliverables belong in `artifacts/<role>/<skill-name>/<task-id>/`.
+- Prefer a stable `<task-id>` such as a date stamp, slug, or ticket-style identifier.
+- When a skill writes multiple files for one run, include a `README.md` in the task folder that records status and the file list.
+
+### Contract boundary
+
+- Put most routing guidance in frontmatter `description`, not in a long "When to use" section.
+- Keep `SKILL.md` focused on required inputs, workflow, outputs, done checks, and safety expectations.
+- Move long examples, provider variants, or domain deep dives into `references/`.
+- Move deterministic repeated steps into `scripts/`.
+- Put reusable templates and static helper assets in `assets/`.
+
+### Runner metadata
+
+- If `agents/openai.yaml` exists, treat it as UI metadata, not the source of truth for the skill contract.
+- Keep it in sync with the current `SKILL.md`.
 
 ## Context economy (why structure matters)
 
@@ -111,4 +147,3 @@ Recommended “done” workflow after changing a skill:
 3) Smoke test:
    - Run any referenced helper scripts with minimal safe inputs (prefer dry-run flags), and/or
    - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `temp/`/`artifacts/`.
-

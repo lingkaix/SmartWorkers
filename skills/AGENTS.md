@@ -1,3 +1,9 @@
+## Skill authoring pointers
+
+- Use `$skill-creator` for the generic draft, test, and iteration loop when creating or improving a skill.
+- Use `skills/general/agent-skills/assets/templates/SKILL.md` as the default scaffold for repo skills.
+- Use `skills/general/agent-skills/references/AUTHORING.md` as the canonical SmartWorkers house-style guide.
+
 ## Codex sync (required, local-only)
 
 After you **add a new skill** or **update an existing skill** in this repo (anything under `skills/<role>/<skill-name>/`), you must also sync it into a **project-local** Codex test setup so Codex picks up the latest contract and helpers.

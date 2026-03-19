@@ -62,7 +62,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access t
 ## Assets
 
   - Template files live in `assets/templates/` and are rendered by `scripts/init_workspace.sh`:
-    - `.mise.toml.tmpl`
+    - `mise.toml.tmpl`
     - `package.json.tmpl`
     - `pyproject.toml.tmpl`
     - `gitignore.recommended`

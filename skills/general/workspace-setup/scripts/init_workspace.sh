@@ -78,6 +78,36 @@ if [[ ! -d "$assets_dir" ]]; then
   exit 1
 fi
 
+required_templates=(
+  "AGENTS.md.tmpl"
+  "README.md.tmpl"
+  "WORKFLOW.md.tmpl"
+  "mise.toml.tmpl"
+  "package.json.tmpl"
+  "pyproject.toml.tmpl"
+  "workers.example.jsonc.tmpl"
+  "logs.AGENTS.md.tmpl"
+  "temp.AGENTS.md.tmpl"
+  "artifacts.AGENTS.md.tmpl"
+  "gitignore.recommended"
+)
+
+missing_templates=()
+for template_name in "${required_templates[@]}"; do
+  if [[ ! -f "$assets_dir/$template_name" ]]; then
+    missing_templates+=("$template_name")
+  fi
+done
+
+if (( ${#missing_templates[@]} > 0 )); then
+  echo "Missing required workspace-setup templates in $assets_dir:" >&2
+  for template_name in "${missing_templates[@]}"; do
+    echo "  - $template_name" >&2
+  done
+  echo "Restore the missing template files, then re-run init_workspace.sh." >&2
+  exit 1
+fi
+
 sanitize_project_name() {
   local raw="$1"
   raw="$(echo "$raw" | tr '[:upper:]' '[:lower:]')"
@@ -234,9 +264,13 @@ render_template "$assets_dir/WORKFLOW.md.tmpl" \
   "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
   | write_if_missing "$workflow_target" "WORKFLOW.md"
 
-render_template "$assets_dir/.mise.toml.tmpl" \
+render_template "$assets_dir/mise.toml.tmpl" \
   "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
   | write_if_missing "$mise_toml_target" ".mise.toml"
+
+if [[ "$apply" == "true" ]] && [[ -f "$mise_toml_target" ]] && command -v mise >/dev/null 2>&1; then
+  mise trust "$mise_toml_target"
+fi
 
 render_template "$assets_dir/package.json.tmpl" \
   "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \

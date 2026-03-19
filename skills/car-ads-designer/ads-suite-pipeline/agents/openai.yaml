@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ads Suite Pipeline"
+  short_description: "Run the Subaru ad loop end to end"
+  default_prompt: "Use $ads-suite-pipeline to run the Subaru ad production loop from approved source pack through final approved deliverables."

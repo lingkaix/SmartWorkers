@@ -3,6 +3,7 @@
 - Use `$skill-creator` for the generic draft, test, and iteration loop when creating or improving a skill.
 - Use `skills/general/agent-skills/assets/templates/SKILL.md` as the default scaffold for repo skills.
 - Use `skills/general/agent-skills/references/AUTHORING.md` as the canonical SmartWorkers house-style guide.
+- Use `https://github.com/lingkaix/SmartWorkers` as the canonical install source for SmartWorkers skills when setting up another workspace or teammate environment.
 
 ## Codex sync (required, local-only)
 

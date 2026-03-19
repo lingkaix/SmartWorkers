@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ads Info Gatherer"
+  short_description: "Gather dealer ad source packs"
+  default_prompt: "Use $ads-info-gatherer to collect the full source pack for a dealer car ad campaign."

@@ -13,3 +13,7 @@ run = [
   "uv venv --seed",
   "uv sync",
 ]
+
+[env]
+TEST_VAR = true
+CODEX_SANDBOX_NETWORK_DISABLED = false

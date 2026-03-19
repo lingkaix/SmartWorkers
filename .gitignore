@@ -5,6 +5,8 @@ temp/**
 artifacts/**
 !artifacts/AGENTS.md
 .codex/
+.agents/
+skills-lock.json
 
 node_modules/
 .venv/

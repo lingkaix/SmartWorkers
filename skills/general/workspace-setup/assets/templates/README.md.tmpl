@@ -33,19 +33,19 @@ Use `temp/` for user-managed one-off files that do not need the structured run-f
 
 ## Tools and skill setup
 
-This workspace is not fully set up until the required skill baseline is in place: `mise` runtimes for the machine, plus the workspace-local skills `skill-creator` and `smart-skill-maker` under `skills/`. Skills in this workspace must be installed locally with `npx skill ...`, not through any global or Codex-managed install path.
+This workspace is not fully set up until the required skill baseline is in place: `mise` runtimes for the machine, the global `skills` npm package, plus the Codex skills `skill-creator` and `smart-skill-maker`. Keep workspace-local authored skill sources under `skills/`, and use `npx skills ...` to install or refresh Codex skills from this workspace.
 
 ```sh
 mise use -g node@24 python@3.14 uv@latest
-# Install workspace skills locally from the workspace root:
-npx skill ...
+# Install/apply Codex skills from the workspace root:
+npx skills ...
 ```
 
-- `npx skill ...` is the only tool for installing or updating agent skills in this workspace.
+- `npx skills ...` is the only tool for installing or updating Codex skills for this workspace.
 - `skill-creator` and `smart-skill-maker` are required parts of the workspace setup baseline, not optional add-ons.
 - Use `smart-skill-maker` as the only tool for creating or improving skills in this workspace.
-- Keep installed skills inside the workspace-local `skills/` tree.
-- Do not use `skill-installer`, global npm skill installs, or Codex-home installs for workspace skills.
+- Keep authored source skills inside the workspace-local `skills/` tree, then apply them to Codex with `npx skills ...`.
+- Do not use `skill-installer` or manual copying for workspace skills.
 - Keep skill names stable and use frontmatter `metadata.skill_version` to distinguish revisions.
 - Increment `metadata.skill_version` every time a skill is updated.
 - If a task later needs helper scripts or extra tooling, prefer mature, well-known tools before writing custom one-off code.
@@ -64,8 +64,8 @@ If a task needs a tool that is not installed yet, ask the agent or a technical t
 2) Update `WORKFLOW.md` when you have recurring ways of working you want the agent to follow.
 3) Say `work work` when you want Codex to consult `WORKFLOW.md` before starting.
 4) If setup was deferred earlier, finish the required skill bootstrap before relying on workspace skills.
-5) Use `npx skill ...` to install or refresh skills inside this workspace.
-6) Keep locally authored skill sources under `skills/`, and keep the installed skills local to this same workspace.
+5) Use `npx skills ...` to install or refresh Codex skills from this workspace.
+6) Keep locally authored skill sources under `skills/`, then apply them to Codex with `npx skills ...`.
 7) Use `smart-skill-maker` when you want to create or improve a skill.
 8) Ask for a task and specify outputs, for example:
 

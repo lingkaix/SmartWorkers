@@ -6,7 +6,7 @@ This folder is the workspace-local source of truth for skills created or improve
 
 - Use `smart-skill-maker` as the only skill for creating or improving skills here.
 - Keep `skill-creator` installed as part of the required authoring baseline because `smart-skill-maker` builds on it.
-- Use `npx skill ...` as the only tool for installing or updating skills in this workspace.
+- Use `npx skills ...` as the only tool for installing or updating skills in this workspace.
 - Do not install workspace skills outside this repo or maintain a second copy as the source of truth.
 - Keep source skills under `skills/<role>/<skill-name>/`.
 - Keep each skill `name` stable, and track revisions in frontmatter `metadata.skill_version` instead of appending versions to the skill name.
@@ -20,7 +20,7 @@ This folder is the workspace-local source of truth for skills created or improve
 3. Install or refresh the skill locally in this workspace with:
 
 ```sh
-npx skill ...
+npx skills ...
 ```
 
 ## Safety

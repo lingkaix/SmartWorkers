@@ -18,13 +18,16 @@ Options:
   --python VERSION    Python version for pyproject.toml (default: 3.14)
   --smart-skill-maker-source SOURCE
                      Override the default GitHub source for smart-skill-maker with a user-provided URL or local path
-  --install           Complete the required global mise/npm/skills bootstrap and install skill-creator + smart-skill-maker for Codex
+  --install           Complete the required global mise/npm/skills bootstrap and install skill-creator + smart-skill-maker for Codex (default behavior; kept for clarity)
+  --no-install        Skip the bootstrap/install step and only scaffold workspace files
   --uv-sync           Run `uv venv --seed` then `uv sync` (requires uv)
   -h, --help          Show help
 
 Notes:
   - Files are written directly into the repo root.
   - Existing files are never overwritten.
+  - By default, this script both scaffolds the workspace and finishes the required bootstrap in one shot.
+  - Use `--no-install` only when downloads/runtime changes must be deferred or the environment is offline.
   - Generates the baseline workspace skeleton:
     - repo root: AGENTS.md (workspace policy)
     - logs/: logs/AGENTS.md (agent scratch rules)
@@ -40,11 +43,11 @@ EOF
 repo="."
 node_version="24"
 python_version="3.14"
-workspace_setup_version="1.0.5"
+workspace_setup_version="1.0.7"
 skill_creator_source="https://github.com/anthropics/skills/tree/main/skills/skill-creator"
 smart_skill_maker_source_fallback="https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/smart-skill-maker"
 smart_skill_maker_source="$smart_skill_maker_source_fallback"
-do_install="false"
+do_install="true"
 do_uv_sync="false"
 
 while [[ $# -gt 0 ]]; do
@@ -54,6 +57,7 @@ while [[ $# -gt 0 ]]; do
     --python) python_version="${2:-}"; shift 2 ;;
     --smart-skill-maker-source) smart_skill_maker_source="${2:-}"; shift 2 ;;
     --install) do_install="true"; shift ;;
+    --no-install) do_install="false"; shift ;;
     --uv-sync) do_uv_sync="true"; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown arg: $1" >&2; usage; exit 2 ;;
@@ -280,7 +284,8 @@ fi
 
 if [[ "$do_install" != "true" ]]; then
   echo
-  echo "Setup note: this workspace is not fully set up until the required Codex skill tooling is installed:"
+  echo "Setup note: bootstrap was skipped because --no-install was requested."
+  echo "This workspace is not fully set up until the required Codex skill tooling is installed:"
   echo "  - global mise runtimes: node@$node_version python@$python_version uv@latest"
   echo "  - global npm package: skills"
   echo "  - Codex skills: skill-creator and smart-skill-maker"

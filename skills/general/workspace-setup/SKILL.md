@@ -1,8 +1,8 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.6"
-description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
+  skill_version: "1.0.7"
+description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and the required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap completed in one turn by default. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
 
@@ -16,12 +16,12 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
   - Node `24`
   - Python `3.14`
 - OS and shell constraints, especially whether the environment is macOS, Linux, or Windows via WSL2
-- Whether networked installs are allowed now for the required global runtime bootstrap and Codex skill tooling:
+- Whether downloads/runtime changes must be deferred for the required global runtime bootstrap and Codex skill tooling:
   - global `mise` runtimes
   - global `skills` npm package
   - `skill-creator`
   - `smart-skill-maker`
-- If networked installs cannot run now, record that setup is only partially complete and leave exact next steps for finishing the required bootstrap later
+- If downloads cannot run now, use `--no-install`, record that setup is only partially complete, and leave exact next steps for finishing the required bootstrap later
 
 ## Workflow
 
@@ -34,11 +34,10 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path>`
    - From the skill folder:
      - `bash scripts/init_workspace.sh --repo <path>`
-   - The script writes directly into the repo root in one shot.
+   - The script writes directly into the repo root and, by default, completes the required bootstrap in the same run.
    - Existing files are never overwritten.
    - If `AGENTS.md` already exists at the repo root, stop and switch to manual adoption or a fresh folder.
-   - For a fully completed setup, follow with the required skill-tool bootstrap in Step 5, or use:
-     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --install`
+   - Use `--no-install` only when the user explicitly wants scaffold-only output or the environment is offline.
 
 3. Confirm the generated workspace skeleton landed correctly.
    - The initializer can generate:
@@ -62,7 +61,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - If a file already exists and the repo should still adopt the workspace conventions, merge in only the missing sections manually while preserving existing project-specific content.
    - Treat this as a new-workspace initializer, not a blind upgrader for mature repos.
 
-5. Bootstrap the required global tools and Codex skill tooling for every workspace setup when the user approves install steps.
+5. Bootstrap the required global tools and Codex skill tooling by default during every workspace setup.
    - Because Codex runs commands inside a sandbox, the runtime tools it depends on should be available globally.
    - Preferred global runtime baseline:
      - `mise use -g node@24 python@3.14 uv@latest`
@@ -80,9 +79,9 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
        - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/smart-skill-maker`
      - Only use a local disk source when the user explicitly provides a filesystem path, typically while iterating on `smart-skill-maker` itself:
        - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/smart-skill-maker`
-   - The initializer script can help with this directly:
-     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --install`
-   - If install approval or network access is unavailable, leave the workspace marked as partially set up and report the exact commands needed to finish the required bootstrap later.
+   - The initializer script already does this by default:
+     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path>`
+   - Use `--no-install` only when the user explicitly wants to avoid downloads/global runtime changes or network access is unavailable.
 
 6. Ensure the generated workspace guidance carries the runtime skill-installation and authoring rules.
    - Put the workspace-level policy in repo-root `AGENTS.md`, not only in this setup skill.
@@ -115,7 +114,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - Confirm the repo-root files and per-folder `AGENTS.md` files now exist where expected.
    - Report the `workspace-setup` skill version shown in `README.md`.
    - Always report the status of `mise`, npm, `npx skills`, `skill-creator`, and `smart-skill-maker`.
-   - If the required bootstrap was deferred, say clearly that setup is incomplete until those installs finish.
+   - Only report setup as partial when `--no-install` was intentionally used or the bootstrap failed.
 
 ## Temp and output conventions
 
@@ -143,7 +142,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 
 ## Defaults & rules
 
-- Default to direct apply. This skill is meant to finish setup in one shot for non-technical users.
+- Default to direct apply plus bootstrap. This skill is meant to finish setup in one shot for non-technical users.
 - Treat this as a new-workspace initializer, not a blind in-place upgrader for mature repos.
 - Keep real secrets in `workers.jsonc`; `workers.example.jsonc` should stay safe to commit.
 - Prefer the script for deterministic setup, and manual edits only when the user wants partial adoption into an existing repo.
@@ -156,7 +155,8 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Increment `metadata.skill_version` every time a skill is updated.
 - Prefer mature, well-known CLI tools before custom one-off code when those tools are a clear fit for the task.
 - Avoid random community utilities unless they are clearly justified and approved.
-- Ask before running install steps that download dependencies or modify the local runtime environment or global toolchain.
+- Do not stop after only writing files unless the user explicitly asked for scaffold-only output or bootstrap fails.
+- Use `--no-install` only when the user explicitly asked to avoid downloads/runtime changes or the environment is offline.
 
 ## Definition of done
 
@@ -165,7 +165,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - The generated files accurately reflect the user's tool-version and workspace-structure constraints
 - `README.md` shows the `workspace-setup` skill version
 - `mise`, npm, and `npx skills` are available globally, or setup is explicitly reported as incomplete with exact next steps
-- If dependency bootstrap was requested, the required commands completed successfully or failures were reported clearly with next steps
+- The required bootstrap commands completed successfully unless `--no-install` was intentionally used
 - `skill-creator` and `smart-skill-maker` are installed for Codex, or setup is explicitly reported as incomplete with exact next steps
 
 ## Safety / quality checklist

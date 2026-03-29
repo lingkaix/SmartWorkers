@@ -1,4 +1,4 @@
 interface:
   display_name: "Workspace Setup"
   short_description: "Initialize a SmartWorkers workspace"
-  default_prompt: "Use $workspace-setup to create a SmartWorkers-style workspace with README.md, WORKFLOW.md, AGENTS.md, a local skills source tree, direct one-shot setup, and the required global mise plus npx skills, skill-creator, and smart-skill-maker bootstrap baseline."
+  default_prompt: "Use $workspace-setup to create a SmartWorkers-style workspace with README.md, WORKFLOW.md, AGENTS.md, a local skills source tree, and a one-turn scaffold-plus-bootstrap flow that installs the required mise, npx skills, skill-creator, and smart-skill-maker baseline by default."

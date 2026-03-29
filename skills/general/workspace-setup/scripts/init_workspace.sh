@@ -16,7 +16,9 @@ Options:
   --repo PATH         Repo root (default: .)
   --node VERSION      Node version for package.json engines (default: 24)
   --python VERSION    Python version for pyproject.toml (default: 3.14)
-  --install           Bootstrap global mise/npm/skills tooling and install skill-creator + smart-skill-maker for Codex
+  --smart-skill-maker-source SOURCE
+                     Override the default GitHub source for smart-skill-maker with a user-provided URL or local path
+  --install           Complete the required global mise/npm/skills bootstrap and install skill-creator + smart-skill-maker for Codex
   --uv-sync           Run `uv venv --seed` then `uv sync` (requires uv)
   -h, --help          Show help
 
@@ -38,10 +40,11 @@ EOF
 repo="."
 node_version="24"
 python_version="3.14"
-workspace_setup_version="1.0.0"
-workspace_template_spec_version="1"
+workspace_setup_version="1.0.1"
+workspace_template_spec_version="2"
 skill_creator_source="https://github.com/anthropics/skills/tree/main/skills/skill-creator"
 smart_skill_maker_source_fallback="https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker"
+smart_skill_maker_source="$smart_skill_maker_source_fallback"
 do_install="false"
 do_uv_sync="false"
 
@@ -50,6 +53,7 @@ while [[ $# -gt 0 ]]; do
     --repo) repo="${2:-}"; shift 2 ;;
     --node) node_version="${2:-}"; shift 2 ;;
     --python) python_version="${2:-}"; shift 2 ;;
+    --smart-skill-maker-source) smart_skill_maker_source="${2:-}"; shift 2 ;;
     --install) do_install="true"; shift ;;
     --uv-sync) do_uv_sync="true"; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -65,7 +69,6 @@ fi
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 assets_dir="$script_dir/../assets/templates"
-smart_skill_maker_source_local="$(cd -- "$script_dir/../../agent-skills/skills/smart-skill-maker" 2>/dev/null && pwd || true)"
 
 if [[ ! -d "$assets_dir" ]]; then
   echo "Missing assets templates directory: $assets_dir" >&2
@@ -280,12 +283,17 @@ if [[ "$do_install" == "true" ]]; then
   fi
 
   mise exec "node@$node_version" -- npx skills add -a codex -y "$skill_creator_source"
+  mise exec "node@$node_version" -- npx skills add -a codex -y "$smart_skill_maker_source"
+fi
 
-  if [[ -n "$smart_skill_maker_source_local" ]] && [[ -d "$smart_skill_maker_source_local" ]]; then
-    mise exec "node@$node_version" -- npx skills add -a codex -y "$smart_skill_maker_source_local"
-  else
-    mise exec "node@$node_version" -- npx skills add -a codex -y "$smart_skill_maker_source_fallback"
-  fi
+if [[ "$do_install" != "true" ]]; then
+  echo
+  echo "Setup note: this workspace is not fully set up until the required Codex skill tooling is installed:"
+  echo "  - global mise runtimes: node@$node_version python@$python_version uv@latest"
+  echo "  - global npm package: skills"
+  echo "  - Codex skills: skill-creator and smart-skill-maker"
+  echo "Finish with:"
+  echo "  bash $script_dir/init_workspace.sh --repo $repo --install"
 fi
 
 if [[ "$do_uv_sync" == "true" ]]; then

@@ -38,6 +38,7 @@ This file is for agent runners and maintainers of this workspace. It defines how
 
 ## Skill installation and authoring policy
 
+- Every SmartWorkers workspace must include this baseline: `npx skills`, `skill-creator`, and `smart-skill-maker`.
 - `npx skills` is the only tool for installing or updating agent skills in this workspace.
 - Check whether the `skills` npm package is installed globally with:
   - `mise exec node@24 -- npm list -g skills --depth=0`
@@ -52,10 +53,11 @@ This file is for agent runners and maintainers of this workspace. It defines how
 - Do not manually copy or patch skill folders under `.agents/skills/`; let `npx skills` manage the installed Codex copy.
 - Install `skill-creator` with:
   - `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
-- Install `smart-skill-maker` from local disk when the SmartWorkers source repo is already available, for example:
-  - `mise exec node@24 -- npx skills add -a codex -y <smartworkers-source>/skills/general/agent-skills/skills/smart-skill-maker`
-- Otherwise use the canonical GitHub source:
+- Install `smart-skill-maker` from the canonical GitHub source by default:
   - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker`
+- Only switch to a local disk source when the user explicitly provides that filesystem path, typically while iterating on `smart-skill-maker` itself:
+  - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/agent-skills/skills/smart-skill-maker`
+- If the required baseline is missing, install it before doing skill authoring work and report the workspace as only partially set up until that is done.
 - Use `smart-skill-maker` as the only tool for creating or improving skills in this workspace.
 - `smart-skill-maker` works from the workspace-local `skills/` source tree, then applies updates to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
 - Keep the local source of truth in `skills/`, following `skills/AGENTS.md`.

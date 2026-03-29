@@ -1,8 +1,8 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.0"
-description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and global `mise` plus `npx skills` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
+  skill_version: "1.0.2"
+description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
 
@@ -16,12 +16,12 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
   - Node `24`
   - Python `3.14`
 - OS and shell constraints, especially whether the environment is macOS, Linux, or Windows via WSL2
-- Whether networked installs are allowed for global runtime bootstrap, `npx skills` installs, or later dependency sync
-- Whether the workspace should bootstrap Codex skill tooling during setup:
+- Whether networked installs are allowed now for the required global runtime bootstrap and Codex skill tooling:
   - global `mise` runtimes
   - global `skills` npm package
   - `skill-creator`
   - `smart-skill-maker`
+- If networked installs cannot run now, record that setup is only partially complete and leave exact next steps for finishing the required bootstrap later
 
 ## Workflow
 
@@ -37,6 +37,8 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - The script writes directly into the repo root in one shot.
    - Existing files are never overwritten.
    - If `AGENTS.md` already exists at the repo root, stop and switch to manual adoption or a fresh folder.
+   - For a fully completed setup, follow with the required skill-tool bootstrap in Step 5, or use:
+     - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --install`
 
 3. Confirm the generated workspace skeleton landed correctly.
    - The initializer can generate:
@@ -60,7 +62,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - If a file already exists and the repo should still adopt the workspace conventions, merge in only the missing sections manually while preserving existing project-specific content.
    - Treat this as a new-workspace initializer, not a blind upgrader for mature repos.
 
-5. Bootstrap global tools when the machine does not already have them and the user approves install steps.
+5. Bootstrap the required global tools and Codex skill tooling for every workspace setup when the user approves install steps.
    - Because Codex runs commands inside a sandbox, the runtime tools it depends on should be available globally.
    - Preferred global runtime baseline:
      - `mise use -g node@24 python@3.14 uv@latest`
@@ -74,35 +76,29 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - Install `skill-creator` for Codex:
      - `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
    - Install `smart-skill-maker` for Codex:
-     - Prefer local disk source when the SmartWorkers repo is already on disk:
-       - `mise exec node@24 -- npx skills add -a codex -y <smartworkers-source>/skills/general/agent-skills/skills/smart-skill-maker`
-     - Otherwise fall back to the canonical GitHub source:
+     - Default to the canonical GitHub source:
        - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker`
+     - Only use a local disk source when the user explicitly provides a filesystem path, typically while iterating on `smart-skill-maker` itself:
+       - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/agent-skills/skills/smart-skill-maker`
    - The initializer script can help with this directly:
      - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --install`
+   - If install approval or network access is unavailable, leave the workspace marked as partially set up and report the exact commands needed to finish the required bootstrap later.
 
-6. Use `npx skills` as the only install/update tool for agent skills in the workspace.
-   - Install or refresh skills with:
-     - `npx skills add -a codex -y <source>`
-   - Apply a locally authored skill from the workspace source tree with:
-     - `npx skills add -a codex -y ./skills --skill <skill-name>`
-   - Check for updates with:
-     - `npx skills check`
-   - Update installed skills with:
-     - `npx skills update`
-   - Do not manually copy or patch `.agents/skills/`; let `npx skills` manage the installed agent copy.
+6. Ensure the generated workspace guidance carries the runtime skill-installation and authoring rules.
+   - Put the workspace-level policy in repo-root `AGENTS.md`, not only in this setup skill.
+   - The generated `AGENTS.md` should define:
+     - `npx skills` as the only install/update path for agent skills
+     - `skill-creator` and `smart-skill-maker` as required baseline tooling
+     - the default GitHub install source for `smart-skill-maker`, with local-disk install only when the user explicitly provides a path
+     - `smart-skill-maker` as the only create/improve tool for workspace skills
+   - The generated `skills/AGENTS.md` should define:
+     - `skills/` as the local source of truth
+     - `skills/<role>/<skill-name>/` as the source layout
+     - stable skill names plus frontmatter `metadata.skill_version`
+     - applying local changes with `npx skills add -a codex -y ./skills --skill <skill-name>`
+   - Keep `SKILL.md` focused on setup workflow and on verifying that the generated templates contain the right rules.
 
-7. Use `smart-skill-maker` as the only create/improve skill tool inside the workspace.
-   - `smart-skill-maker` uses `skill-creator` as its core authoring engine, then layers SmartWorkers conventions on top.
-   - The workspace-local `skills/` folder is the source of truth for skills being created or upgraded.
-   - For a new skill, create it under `skills/<role>/<skill-name>/`.
-   - Keep the skill `name` stable for install/update commands, and record revisions in frontmatter `metadata.skill_version` instead of appending versions to the skill name.
-   - A role is the worker identity and usage scope, not a generic tool category. Put similar capabilities into different roles when the real job, workflow, or acceptance criteria differ.
-   - When improving an already installed skill and no source copy exists yet, first copy the current installed copy from `.agents/skills/<skill-name>/` into `skills/<role>/<skill-name>/`, where `<role>` is the worker the skill belongs to.
-   - After the skill is created or updated in `skills/`, apply the update to Codex with:
-     - `npx skills add -a codex -y ./skills --skill <skill-name>`
-
-8. Bootstrap repo-local dependencies only when needed and only with clear approval.
+7. Bootstrap repo-local dependencies only when needed and only with clear approval.
    - Optional Python bootstrap:
      - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --uv-sync`
    - If the repo later adds Node or other tool-specific dependencies, install them with the repo-local package manager and lockfile rather than using ad-hoc global packages.
@@ -113,11 +109,12 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `uv` for Python environments and dependency sync
    - Avoid obscure community utilities unless there is a clear reason and the user or maintainer has approved them.
 
-9. Report what was created, skipped, or left for manual follow-up.
+8. Report what was created, skipped, or left for manual follow-up.
    - Call out any files that were skipped because they already existed.
    - Confirm the repo-root files and per-folder `AGENTS.md` files now exist where expected.
    - Report the workspace-setup generator version and template spec version used for generated guidance files.
-   - If global bootstrap was requested, report the status of `mise`, npm, `npx skills`, `skill-creator`, and `smart-skill-maker`.
+   - Always report the status of `mise`, npm, `npx skills`, `skill-creator`, and `smart-skill-maker`.
+   - If the required bootstrap was deferred, say clearly that setup is incomplete until those installs finish.
 
 ## Temp and output conventions
 
@@ -141,7 +138,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
   - `temp/AGENTS.md`
   - `artifacts/AGENTS.md`
   - `skills/AGENTS.md`
-- Optional installed agent skills under `.agents/skills/` when setup also bootstraps or applies skills
+- Installed agent skills under `.agents/skills/` after the required setup bootstrap finishes, or a clearly documented follow-up if install steps were deferred
 
 ## Defaults & rules
 
@@ -150,6 +147,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Keep real secrets in `workers.jsonc`; `workers.example.jsonc` should stay safe to commit.
 - Prefer the script for deterministic setup, and manual edits only when the user wants partial adoption into an existing repo.
 - Prefer global `mise` for Codex runtimes when Node, Python, npm, npx, or uv are missing.
+- Treat `npx skills`, `skill-creator`, and `smart-skill-maker` as required setup baseline for every SmartWorkers workspace, not optional extras.
 - Use `npx skills` as the only install/update tool for agent skills in the workspace.
 - Use `smart-skill-maker` as the only create/improve skill tool in the workspace.
 - Keep the source of truth for authored skills under `skills/`, then apply them to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
@@ -164,9 +162,9 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - `logs/`, `temp/`, `artifacts/`, and `skills/` exist with their corresponding `AGENTS.md` files where expected
 - The generated files accurately reflect the user's tool-version and workspace-structure constraints
 - The generated guidance files show the workspace-setup generator version and template spec version
-- If global bootstrap was requested, `mise`, npm, and `npx skills` are available globally or failures were reported clearly with next steps
+- `mise`, npm, and `npx skills` are available globally, or setup is explicitly reported as incomplete with exact next steps
 - If dependency bootstrap was requested, the required commands completed successfully or failures were reported clearly with next steps
-- If skills were part of setup, `skill-creator` and `smart-skill-maker` are installed for Codex and `npx skills` is the documented install/update path
+- `skill-creator` and `smart-skill-maker` are installed for Codex, or setup is explicitly reported as incomplete with exact next steps
 
 ## Safety / quality checklist
 

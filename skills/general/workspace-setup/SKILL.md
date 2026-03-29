@@ -1,7 +1,7 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.2"
+  skill_version: "1.0.4"
 description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
@@ -55,7 +55,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `package.json` for the Node workspace manifest
      - `pyproject.toml` for the Python project manifest used by `uv`
    - Check that `AGENTS.md`, `WORKFLOW.md`, `skills/AGENTS.md`, `.gitignore`, and `.ignore` fit the workspace the user is actually setting up.
-   - Check that generated guidance files include the workspace-setup generator version and template spec version so maintainers can identify which conventions produced them.
+   - Check that `README.md` includes the `workspace-setup` skill version so users can identify which setup conventions produced the workspace.
 
 4. Handle existing repos conservatively.
    - The script never overwrites existing files.
@@ -112,7 +112,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 8. Report what was created, skipped, or left for manual follow-up.
    - Call out any files that were skipped because they already existed.
    - Confirm the repo-root files and per-folder `AGENTS.md` files now exist where expected.
-   - Report the workspace-setup generator version and template spec version used for generated guidance files.
+   - Report the `workspace-setup` skill version shown in `README.md`.
    - Always report the status of `mise`, npm, `npx skills`, `skill-creator`, and `smart-skill-maker`.
    - If the required bootstrap was deferred, say clearly that setup is incomplete until those installs finish.
 
@@ -151,7 +151,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Use `npx skills` as the only install/update tool for agent skills in the workspace.
 - Use `smart-skill-maker` as the only create/improve skill tool in the workspace.
 - Keep the source of truth for authored skills under `skills/`, then apply them to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
-- Keep skill names stable; use frontmatter `metadata.skill_version` and generated version banners to distinguish revisions instead of embedding versions in the skill name.
+- Keep skill names stable; use frontmatter `metadata.skill_version` to distinguish revisions instead of embedding versions in the skill name.
 - Prefer mature, well-known CLI tools before custom one-off code when those tools are a clear fit for the task.
 - Avoid random community utilities unless they are clearly justified and approved.
 - Ask before running install steps that download dependencies or modify the local runtime environment or global toolchain.
@@ -161,7 +161,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - The repo root has `README.md`, `WORKFLOW.md`, `AGENTS.md`, `.gitignore`, `.ignore`, `workers.example.jsonc`, `package.json`, and `pyproject.toml` unless intentionally skipped because matching files already existed
 - `logs/`, `temp/`, `artifacts/`, and `skills/` exist with their corresponding `AGENTS.md` files where expected
 - The generated files accurately reflect the user's tool-version and workspace-structure constraints
-- The generated guidance files show the workspace-setup generator version and template spec version
+- `README.md` shows the `workspace-setup` skill version
 - `mise`, npm, and `npx skills` are available globally, or setup is explicitly reported as incomplete with exact next steps
 - If dependency bootstrap was requested, the required commands completed successfully or failures were reported clearly with next steps
 - `skill-creator` and `smart-skill-maker` are installed for Codex, or setup is explicitly reported as incomplete with exact next steps

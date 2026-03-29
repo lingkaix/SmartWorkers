@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workspace Autoresearch"
+  short_description: "Bounded workspace review and improvement loop."
+  default_prompt: "Use $workspace-autoresearch to review and iteratively improve this workspace with a dynamic evaluator."

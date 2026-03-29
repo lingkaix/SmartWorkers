@@ -36,29 +36,15 @@ This file is for agent runners and maintainers of this workspace. It defines how
 
 ## Skill installation and authoring policy
 
-- Every SmartWorkers workspace must include this baseline: `npx skills`, `skill-creator`, and `smart-skill-maker`.
-- `npx skills` is the only tool for installing or updating agent skills in this workspace.
-- Check whether the `skills` npm package is installed globally with:
-  - `mise exec node@24 -- npm list -g skills --depth=0`
-- If it is missing, install it globally with:
-  - `mise exec node@24 -- npm install -g skills`
-- Common install and update commands:
-  - `npx skills list -a codex`
-  - `npx skills add -a codex -y <source>`
-  - `npx skills add -a codex -y ./skills --skill <skill-name>`
-  - `npx skills check`
-  - `npx skills update`
-- Do not manually copy or patch skill folders under `.agents/skills/`; let `npx skills` manage the installed Codex copy.
-- Install `skill-creator` with:
-  - `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
-- Install `smart-skill-maker` from the canonical GitHub source by default:
-  - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/smart-skill-maker`
-- Only switch to a local disk source when the user explicitly provides that filesystem path, typically while iterating on `smart-skill-maker` itself:
-  - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/smart-skill-maker`
-- If the required baseline is missing, install it before doing skill authoring work and report the workspace as only partially set up until that is done.
+- Every SmartWorkers workspace must keep its skill baseline installed locally inside the workspace under `skills/`.
+- Use `npx skill ...` as the only tool for installing or updating skills in this workspace.
+- Install skills into the workspace-local `skills/` tree. Do not install workspace skills globally, into a Codex home directory, or by any other out-of-workspace method.
+- Do not use `skill-installer`, global npm packages, Codex-managed global skill installs, or manual copying for workspace skill installation.
+- Required local baseline: `skill-creator` and `smart-skill-maker`.
+- If the required baseline is missing, install it into this workspace with `npx skill ...` before doing skill authoring work, and report the workspace as only partially set up until that is done.
 - Use `smart-skill-maker` as the only tool for creating or improving skills in this workspace.
-- `smart-skill-maker` works from the workspace-local `skills/` source tree, then applies updates to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
 - Keep the local source of truth in `skills/`, following `skills/AGENTS.md`.
+- Keep installed skills local to this workspace rather than maintaining a second installed copy somewhere else.
 - Keep skill names stable; use frontmatter `metadata.skill_version` to distinguish revisions.
 
 ## Secret and config policy
@@ -136,7 +122,7 @@ When setting up or polishing a workspace, ensure these key folders exist and are
 - `artifacts/` (final deliverables)
   - Must contain `artifacts/AGENTS.md` describing what counts as a deliverable, expected structure, and any restrictions.
 - `skills/` (workspace-local skill source tree)
-  - Must contain `skills/AGENTS.md` describing that this is the source of truth for locally authored skills and that `npx skills` is the only install/update path into `.agents/skills/`.
+  - Must contain `skills/AGENTS.md` describing that this is the source of truth for locally authored skills and that `npx skill ...` is the only install/update path for skills in the workspace.
 
 If a key folder is missing, create it. If its `AGENTS.md` is missing or outdated, create/polish it.
 These per-folder `AGENTS.md` files should be tracked in git even if the rest of the folder is ignored.

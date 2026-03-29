@@ -19,7 +19,7 @@ A “worker” in this repo is a **set of skills**: a step-by-step procedure (an
 ## Start in 5 minutes
 
 1) Pick a worker from this repo under `skills/` (open its `SKILL.md` and follow “Required inputs”).
-2) Install it into your Codex project (copy the worker into your project’s `.codex/skills/`).
+2) Install it into your Codex project with `npx skills`.
 3) If the worker requires keys/credentials:
    - Copy `workers.example.jsonc` into your project as `workers.jsonc`
    - Fill in only what the worker asks for
@@ -34,23 +34,16 @@ Example prompt:
 
 ## Installing workers (skills)
 
-Workers live in `skills/<role>/<skill-name>/`. To use one in your own Codex project, copy it into your project’s `.codex/skills/`:
-
-1) In this repo, choose a worker:
-   - `skills/<role>/<skill-name>/`
-2) In your Codex project, create:
-   - `.codex/skills/<skill-name>/`
-3) Copy the worker folder contents into that destination.
-
-If you prefer a one-line command (macOS/Linux):
+Workers live in `skills/<role>/<skill-name>/`. To use one in your own Codex project, install it with `npx skills`:
 
 ```sh
-rsync -a --delete "skills/<role>/<skill-name>/" "<your-codex-project>/.codex/skills/<skill-name>/"
+npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers --skill <skill-name>
 ```
 
 Notes:
 - The `skills/` folder is the source of truth for workers.
-- End users should always install from `skills/`.
+- Use `npx skills` as the only install/update tool for Codex skills.
+- For workspace-local skill development, keep source copies under `skills/` and apply them with `npx skills add -a codex -y ./skills --skill <skill-name>`.
 
 ## Where outputs go
 
@@ -71,5 +64,8 @@ Skills in this repo follow the AgentSkills spec (`https://agentskills.io/specifi
 If you’re creating/updating skills in this repo:
 
 1) Read the AgentSkills spec: `https://agentskills.io/specification`
-2) Install mise (toolchain manager, `https://mise.jdx.dev/`). And then set up the dev environment (above): `mise tasks run setup`
-3) Use the `agent-skills` maintainer skill: `skills/general/agent-skills/SKILL.md`
+2) Install global runtimes with `mise` when needed: `mise use -g node@24 python@3.14 uv@latest`
+3) Ensure the `skills` npm package is available globally: `mise exec node@24 -- npm list -g skills --depth=0 || mise exec node@24 -- npm install -g skills`
+4) Install `skill-creator` for Codex: `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
+5) Install `smart-skill-maker` for Codex from local disk when this repo is already cloned: `mise exec node@24 -- npx skills add -a codex -y ./skills/general/agent-skills/skills/smart-skill-maker`
+6) Use the `agent-skills` maintainer skill when changing repo policy: `skills/general/agent-skills/SKILL.md`

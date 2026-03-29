@@ -25,6 +25,13 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 - `name` in frontmatter must match `<skill-name>` exactly.
 - Start from the template when possible: `skills/general/agent-skills/assets/templates/SKILL.md`
 
+## Role semantics
+
+- A role is the worker identity and usage scope, not just a technical label.
+- Think of a role as a real worker: it should have a clear scope, a coherent set of skills, and one or more workflows it can execute end to end.
+- Similar capabilities may appear in different roles when the requirements differ by position. For example, a copy writer and an ads designer may both use image-generation skills, but the prompts, constraints, review criteria, and workflow should remain role-specific.
+- When placing a skill under `skills/<role>/`, choose the role based on the worker who owns the outcome, not the underlying tool being used.
+
 ## SmartWorkers house rules
 
 ### Config and secrets
@@ -137,13 +144,13 @@ Use these headings so both agents and humans know where to look:
 - Compliance and IP notes (when relevant)
 - Accuracy expectations and how to validate
 
-## The maintainer loop (edit → validate → test)
+## The maintainer loop (edit → validate → apply → test)
 
 Recommended “done” workflow after changing a skill:
 
 1) Validate (if `skills-ref` is available):
    - `skills-ref validate "skills/<role>/<skill-name>"`
-2) Sync to the project-local Codex test setup (required): follow `skills/AGENTS.md`
+2) Apply to the project-local Codex test setup with `npx skills` (required): follow `skills/AGENTS.md`
 3) Smoke test:
    - Run any referenced helper scripts with minimal safe inputs (prefer dry-run flags), and/or
    - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `logs/`/`artifacts/`.

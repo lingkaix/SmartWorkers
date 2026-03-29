@@ -1,0 +1,4 @@
+interface:
+  display_name: "Smart Skill Maker"
+  short_description: "Create or improve SmartWorkers skills"
+  default_prompt: "Use $smart-skill-maker to build or upgrade a SmartWorkers skill in the workspace skills/ source tree, then apply it to Codex with npx skills."

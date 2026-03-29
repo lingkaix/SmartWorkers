@@ -17,28 +17,46 @@ This file is for agent runners and maintainers of this workspace. It defines how
 - Follow the workflow that best matches the request. If multiple workflows could apply, choose the closest match and say which one you used.
 - If `WORKFLOW.md` is missing, too vague, or does not cover the request, say so briefly and continue with the normal workspace rules in this file.
 
-## Runtime and toolchain policy
+## Tooling policy
 
-This workspace uses `mise` to manage runtimes and coding tools (see the repo’s `.mise.toml`).
-
-- When diagnosing issues, always check what tool versions are active: `mise current`
-- When running commands, prefer `mise exec -- <cmd>` so you use the workspace-managed tools, for example:
-  - `mise exec -- node -v`
-  - `mise exec -- python --version`
-  - `mise exec -- uv --version`
-- If a script provides a `mise` task, prefer running the task instead of retyping steps.
-- If you need dependencies to run code, use the workspace toolchain:
-  - Install runtimes via `mise install` (or the repo’s `mise` tasks).
-  - Install Node deps with `npm` in this repo (avoid global installs).
-  - Install/sync Python deps with `uv` (`uv venv --seed`, `uv sync`; avoid global `pip install`).
+- If Node, npm, npx, Python, or uv are missing on the machine, bootstrap them globally with `mise` so Codex can use them from the sandboxed command environment.
+- Preferred global baseline:
+  - `mise use -g node@24 python@3.14 uv@latest`
+- During first-time bootstrap, prefer `mise exec` for the install commands themselves so the tools work immediately in the current shell even before shell startup files are reloaded.
+- Prefer mature, widely used CLI tools before handwritten code when they are a clear fit for the task.
+- Good examples:
+  - `ffmpeg` for video/audio conversion, extraction, and packaging
+  - `ImageMagick` for image conversion, compositing, and batch transforms
+  - `uv` for Python environments and dependency sync
+  - repo-local `npm` scripts for Node workflows
+- Prefer official or broadly trusted tools with stable docs and wide adoption.
+- Avoid obscure one-off community utilities unless the user asks for them or a technical maintainer has approved them.
+- When the repo already defines scripts or dependencies in `package.json` or `pyproject.toml`, use those repo-local entry points before inventing alternatives.
+- Prefer repo-local installs and virtual environments over global package installs. Machine-level global tools are acceptable when they are established prerequisites such as `ffmpeg` or `ImageMagick`.
 
 ## Skill installation and authoring policy
 
-- This workspace uses the `skills` CLI for project-scoped skill installs and updates.
-- Use `npx skills add -a codex -y <repo-or-skill-url>` when adding or refreshing skills for Codex.
-- Do not manually copy skill folders into the repo, and do not use `--all` for normal workspace setup; target `codex` explicitly so installs stay reproducible and scoped to this workspace.
-- Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you need to create or update a skill.
-- If `skill-creator` is missing, install it with `npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`.
+- `npx skills` is the only tool for installing or updating agent skills in this workspace.
+- Check whether the `skills` npm package is installed globally with:
+  - `mise exec node@24 -- npm list -g skills --depth=0`
+- If it is missing, install it globally with:
+  - `mise exec node@24 -- npm install -g skills`
+- Common install and update commands:
+  - `npx skills list -a codex`
+  - `npx skills add -a codex -y <source>`
+  - `npx skills add -a codex -y ./skills --skill <skill-name>`
+  - `npx skills check`
+  - `npx skills update`
+- Do not manually copy or patch skill folders under `.agents/skills/`; let `npx skills` manage the installed Codex copy.
+- Install `skill-creator` with:
+  - `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
+- Install `smart-skill-maker` from local disk when the SmartWorkers source repo is already available, for example:
+  - `mise exec node@24 -- npx skills add -a codex -y <smartworkers-source>/skills/general/agent-skills/skills/smart-skill-maker`
+- Otherwise use the canonical GitHub source:
+  - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker`
+- Use `smart-skill-maker` as the only tool for creating or improving skills in this workspace.
+- `smart-skill-maker` works from the workspace-local `skills/` source tree, then applies updates to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
+- Keep the local source of truth in `skills/`, following `skills/AGENTS.md`.
 
 ## Secret and config policy
 
@@ -79,8 +97,8 @@ If a skill requires a config value and it’s missing or appears invalid (for ex
 5) If the user can’t fix it (or it seems complex), guide them to seek help from a technical person and provide an “inspection bundle” they can forward:
 
    - The exact error message (with any secrets removed).
-   - The command they ran (preferably the `mise exec -- ...` form).
-   - The output of `mise current`.
+   - The exact command they ran.
+   - Relevant tool version output when it matters, for example `node -v`, `python --version`, or `uv --version`.
    - The relevant config path name (for example: `openai.apiKey`) and confirmation of whether it’s present (never the value).
 
 ## Skill script failures: stop and report (don’t “work around”)
@@ -114,6 +132,8 @@ When setting up or polishing a workspace, ensure these key folders exist and are
   - Must contain `temp/AGENTS.md` describing that it is primarily for user-kept temporary files during active work.
 - `artifacts/` (final deliverables)
   - Must contain `artifacts/AGENTS.md` describing what counts as a deliverable, expected structure, and any restrictions.
+- `skills/` (workspace-local skill source tree)
+  - Must contain `skills/AGENTS.md` describing that this is the source of truth for locally authored skills and that `npx skills` is the only install/update path into `.agents/skills/`.
 
 If a key folder is missing, create it. If its `AGENTS.md` is missing or outdated, create/polish it.
 These per-folder `AGENTS.md` files should be tracked in git even if the rest of the folder is ignored.

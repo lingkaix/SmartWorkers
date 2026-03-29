@@ -1,0 +1,28 @@
+# Skill Source Instructions
+
+This folder is the workspace-local source of truth for skills created or improved in this workspace.
+
+## Rules
+
+- Use `smart-skill-maker` as the only skill for creating or improving skills here.
+- Use `npx skills` as the only tool for installing or updating skills into Codex.
+- Do not edit `.agents/skills/<skill-name>/` directly as the source of truth.
+- Keep source skills under `skills/<role>/<skill-name>/`.
+- A role is the worker identity and usage scope. Use the role to represent a real worker with related skills and one or more workflows, not just a generic tool label.
+
+## Common flow
+
+1. Create a new skill or improve an existing one under `skills/<role>/<skill-name>/`.
+2. If you are improving an already installed skill and there is no source copy here yet, first copy the installed skill from `.agents/skills/<skill-name>/` into `skills/<role>/<skill-name>/`, where `<role>` is the worker the skill belongs to.
+3. Finish the edits in `skills/`.
+4. Apply the result to Codex with:
+
+```sh
+npx skills add -a codex -y ./skills --skill <skill-name>
+```
+
+## Safety
+
+- Keep secrets out of skill folders.
+- Keep reusable assets, scripts, and references inside the source skill folder, not scattered around the repo root.
+- If a skill is only half-finished, do not apply it to Codex yet.

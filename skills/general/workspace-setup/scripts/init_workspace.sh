@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-init_workspace.sh: generate/apply a SmartWorkers-style agent workspace skeleton
+init_workspace.sh: initialize a SmartWorkers-style agent workspace in one shot
 
 Usage:
   # From the skill folder (recommended):
@@ -14,37 +14,32 @@ Usage:
 
 Options:
   --repo PATH         Repo root (default: .)
-  --apply             Write into repo root (default: generate into logs/)
-  --node VERSION      Node version for mise (default: 24)
-  --python VERSION    Python version for mise (default: 3.14)
-  --bun VERSION       Bun version for mise (default: latest)
-  --uv VERSION        uv version for mise (default: latest)
-  --install           Run `mise install`, `npm i skills -g`, and install `skill-creator` for Codex (requires mise)
+  --node VERSION      Node version for package.json engines (default: 24)
+  --python VERSION    Python version for pyproject.toml (default: 3.14)
+  --install           Bootstrap global mise/npm/skills tooling and install skill-creator + smart-skill-maker for Codex
   --uv-sync           Run `uv venv --seed` then `uv sync` (requires uv)
   -h, --help          Show help
 
 Notes:
-  - Without --apply, files are written to logs/workspace-setup/ for review.
-  - With --apply, existing files are never overwritten.
+  - Files are written directly into the repo root.
+  - Existing files are never overwritten.
   - Generates the baseline workspace skeleton:
     - repo root: AGENTS.md (workspace policy)
     - logs/: logs/AGENTS.md (agent scratch rules)
     - temp/: temp/AGENTS.md (user temporary-file rules)
     - artifacts/: artifacts/AGENTS.md (deliverables rules)
+    - skills/: skills/AGENTS.md (local skill source rules)
     - README.md, WORKFLOW.md, .gitignore, .ignore, workers.example.jsonc
-    - .mise.toml, package.json, pyproject.toml
-  - With --install, the script also installs the `skills` CLI globally and adds `skill-creator` to Codex for this workspace.
-  - With --apply, this script refuses to run if the repo already has an AGENTS.md. Create a new empty folder for a new workspace.
+    - package.json, pyproject.toml
+  - This script refuses to run if the repo already has an AGENTS.md. Create a new empty folder for a new workspace, or adopt the conventions manually.
 EOF
 }
 
 repo="."
 node_version="24"
 python_version="3.14"
-bun_version="latest"
-uv_version="latest"
-skill_creator_url="https://github.com/anthropics/skills/tree/main/skills/skill-creator"
-apply="false"
+skill_creator_source="https://github.com/anthropics/skills/tree/main/skills/skill-creator"
+smart_skill_maker_source_fallback="https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker"
 do_install="false"
 do_uv_sync="false"
 
@@ -53,9 +48,6 @@ while [[ $# -gt 0 ]]; do
     --repo) repo="${2:-}"; shift 2 ;;
     --node) node_version="${2:-}"; shift 2 ;;
     --python) python_version="${2:-}"; shift 2 ;;
-    --bun) bun_version="${2:-}"; shift 2 ;;
-    --uv) uv_version="${2:-}"; shift 2 ;;
-    --apply) apply="true"; shift ;;
     --install) do_install="true"; shift ;;
     --uv-sync) do_uv_sync="true"; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -71,7 +63,7 @@ fi
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 assets_dir="$script_dir/../assets/templates"
-skill_dir="$(cd -- "$script_dir/.." && pwd)"
+smart_skill_maker_source_local="$(cd -- "$script_dir/../../agent-skills/skills/smart-skill-maker" 2>/dev/null && pwd || true)"
 
 if [[ ! -d "$assets_dir" ]]; then
   echo "Missing assets templates directory: $assets_dir" >&2
@@ -82,13 +74,13 @@ required_templates=(
   "AGENTS.md.tmpl"
   "README.md.tmpl"
   "WORKFLOW.md.tmpl"
-  "mise.toml.tmpl"
   "package.json.tmpl"
   "pyproject.toml.tmpl"
   "workers.example.jsonc.tmpl"
   "logs.AGENTS.md.tmpl"
   "temp.AGENTS.md.tmpl"
   "artifacts.AGENTS.md.tmpl"
+  "skills.AGENTS.md.tmpl"
   "gitignore.recommended"
 )
 
@@ -126,28 +118,24 @@ render_template() {
   local template_path="$1"
   local node_v="$2"
   local python_v="$3"
-  local bun_v="$4"
-  local uv_v="$5"
-  local proj="$6"
+  local proj="$4"
 
   sed \
     -e "s/{{NODE_VERSION}}/${node_v}/g" \
     -e "s/{{PYTHON_VERSION}}/${python_v}/g" \
-    -e "s/{{BUN_VERSION}}/${bun_v}/g" \
-    -e "s/{{UV_VERSION}}/${uv_v}/g" \
     -e "s/{{PROJECT_NAME}}/${proj}/g" \
     "$template_path"
 }
 
 generate_workspace_root_agents_md() {
   render_template "$assets_dir/AGENTS.md.tmpl" \
-    "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name"
+    "$node_version" "$python_version" "$project_name"
 }
 
 generate_folder_agents_md() {
   local template_name="$1"
   render_template "$assets_dir/$template_name" \
-    "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name"
+    "$node_version" "$python_version" "$project_name"
 }
 
 generate_gitignore() {
@@ -191,24 +179,18 @@ EOF
 !temp/**
 !artifacts/
 !artifacts/**
+!skills/
+!skills/**
 EOF
 }
 
-if [[ "$do_install" == "true" || "$do_uv_sync" == "true" ]] && [[ "$apply" != "true" ]]; then
-  echo "--install/--uv-sync require --apply (they modify the repo root)." >&2
-  exit 2
+if [[ -f "$repo/AGENTS.md" ]]; then
+  echo "Refusing to initialize workspace: AGENTS.md already exists at $repo/AGENTS.md" >&2
+  echo "This skill is for initializing a new workspace. Create a new empty folder and run again with --repo <new-folder>, or adopt the conventions manually." >&2
+  exit 1
 fi
 
-if [[ "$apply" == "true" ]]; then
-  if [[ -f "$repo/AGENTS.md" ]]; then
-    echo "Refusing to apply workspace setup: AGENTS.md already exists at $repo/AGENTS.md" >&2
-    echo "This skill is for initializing a new workspace. Create a new empty folder and run again with --repo <new-folder>." >&2
-    exit 1
-  fi
-  out_dir="$repo"
-else
-  out_dir="$repo/logs/workspace-setup"
-fi
+out_dir="$repo"
 
 mkdir -p "$out_dir"
 
@@ -217,21 +199,13 @@ ignore_target="$out_dir/.ignore"
 workers_example_target="$out_dir/workers.example.jsonc"
 readme_target="$out_dir/README.md"
 workflow_target="$out_dir/WORKFLOW.md"
-mise_toml_target="$out_dir/.mise.toml"
 package_json_target="$out_dir/package.json"
 pyproject_target="$out_dir/pyproject.toml"
-
-if [[ "$apply" == "true" ]]; then
-  workspace_agents_target="$repo/AGENTS.md"
-  logs_agents_target="$repo/logs/AGENTS.md"
-  temp_agents_target="$repo/temp/AGENTS.md"
-  artifacts_agents_target="$repo/artifacts/AGENTS.md"
-else
-  workspace_agents_target="$out_dir/AGENTS.md"
-  logs_agents_target="$out_dir/logs.AGENTS.md"
-  temp_agents_target="$out_dir/temp.AGENTS.md"
-  artifacts_agents_target="$out_dir/artifacts.AGENTS.md"
-fi
+workspace_agents_target="$repo/AGENTS.md"
+logs_agents_target="$repo/logs/AGENTS.md"
+temp_agents_target="$repo/temp/AGENTS.md"
+artifacts_agents_target="$repo/artifacts/AGENTS.md"
+skills_agents_target="$repo/skills/AGENTS.md"
 
 write_if_missing() {
   local target="$1"
@@ -253,63 +227,57 @@ generate_gitignore | write_if_missing "$gitignore_target" ".gitignore"
 generate_ignore_for_workdirs | write_if_missing "$ignore_target" ".ignore"
 
 render_template "$assets_dir/workers.example.jsonc.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  "$node_version" "$python_version" "$project_name" \
   | write_if_missing "$workers_example_target" "workers.example.jsonc"
 
 render_template "$assets_dir/README.md.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  "$node_version" "$python_version" "$project_name" \
   | write_if_missing "$readme_target" "README.md"
 
 render_template "$assets_dir/WORKFLOW.md.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  "$node_version" "$python_version" "$project_name" \
   | write_if_missing "$workflow_target" "WORKFLOW.md"
 
-render_template "$assets_dir/mise.toml.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
-  | write_if_missing "$mise_toml_target" ".mise.toml"
-
-if [[ "$apply" == "true" ]] && [[ -f "$mise_toml_target" ]] && command -v mise >/dev/null 2>&1; then
-  mise trust "$mise_toml_target"
-fi
-
 render_template "$assets_dir/package.json.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  "$node_version" "$python_version" "$project_name" \
   | write_if_missing "$package_json_target" "package.json"
 
 render_template "$assets_dir/pyproject.toml.tmpl" \
-  "$node_version" "$python_version" "$bun_version" "$uv_version" "$project_name" \
+  "$node_version" "$python_version" "$project_name" \
   | write_if_missing "$pyproject_target" "pyproject.toml"
 
-if [[ "$apply" == "true" ]]; then
-  mkdir -p "$repo/logs" "$repo/temp" "$repo/artifacts"
-fi
+mkdir -p "$repo/logs" "$repo/temp" "$repo/artifacts" "$repo/skills"
 
 generate_workspace_root_agents_md | write_if_missing "$workspace_agents_target" "AGENTS.md"
-
 generate_folder_agents_md "logs.AGENTS.md.tmpl" | write_if_missing "$logs_agents_target" "logs/AGENTS.md"
 generate_folder_agents_md "temp.AGENTS.md.tmpl" | write_if_missing "$temp_agents_target" "temp/AGENTS.md"
 generate_folder_agents_md "artifacts.AGENTS.md.tmpl" | write_if_missing "$artifacts_agents_target" "artifacts/AGENTS.md"
-
-if [[ "$apply" == "false" ]]; then
-  echo
-  echo "Generated files for review in: $out_dir"
-  echo "To apply to repo root:"
-  echo "  - From the skill folder: (cd \"$skill_dir\" && bash scripts/init_workspace.sh --apply)"
-  echo "  - From the repo root: bash skills/general/workspace-setup/scripts/init_workspace.sh --apply"
-  exit 0
-fi
+generate_folder_agents_md "skills.AGENTS.md.tmpl" | write_if_missing "$skills_agents_target" "skills/AGENTS.md"
 
 echo
-echo "Applied (without overwriting existing files) in repo root: $repo"
+echo "Initialized (without overwriting existing files) in repo root: $repo"
 
 if [[ "$do_install" == "true" ]]; then
   if ! command -v mise >/dev/null 2>&1; then
-    echo "mise not found. Install/activate mise first: https://mise.jdx.dev/getting-started.html" >&2
+    echo "mise not found. Install it globally first: https://mise.jdx.dev/getting-started.html" >&2
     exit 1
   fi
-  (cd "$repo" && mise install)
-  (cd "$repo" && mise exec -- npm i skills -g)
-  (cd "$repo" && mise exec -- npx skills add -a codex -y "$skill_creator_url")
+
+  mise use -g -y "node@$node_version" "python@$python_version" "uv@latest"
+
+  if mise exec "node@$node_version" -- npm list -g skills --depth=0 >/dev/null 2>&1; then
+    echo "skills npm package already installed globally."
+  else
+    mise exec "node@$node_version" -- npm install -g skills
+  fi
+
+  mise exec "node@$node_version" -- npx skills add -a codex -y "$skill_creator_source"
+
+  if [[ -n "$smart_skill_maker_source_local" ]] && [[ -d "$smart_skill_maker_source_local" ]]; then
+    mise exec "node@$node_version" -- npx skills add -a codex -y "$smart_skill_maker_source_local"
+  else
+    mise exec "node@$node_version" -- npx skills add -a codex -y "$smart_skill_maker_source_fallback"
+  fi
 fi
 
 if [[ "$do_uv_sync" == "true" ]]; then
@@ -317,14 +285,10 @@ if [[ "$do_uv_sync" == "true" ]]; then
     (cd "$repo" && uv venv --seed)
     (cd "$repo" && uv sync)
   elif command -v mise >/dev/null 2>&1; then
-    if ! (cd "$repo" && mise exec -- uv --version >/dev/null 2>&1); then
-      echo "uv not available via mise. Run with --install first, or install uv, then re-run with --uv-sync." >&2
-      exit 1
-    fi
-    (cd "$repo" && mise exec -- uv venv --seed)
-    (cd "$repo" && mise exec -- uv sync)
+    (cd "$repo" && mise exec "python@$python_version" "uv@latest" -- uv venv --seed)
+    (cd "$repo" && mise exec "python@$python_version" "uv@latest" -- uv sync)
   else
-    echo "uv not found. Install uv (or install/activate mise), then re-run with --uv-sync." >&2
+    echo "uv not found. Install uv, then re-run with --uv-sync." >&2
     exit 1
   fi
 fi

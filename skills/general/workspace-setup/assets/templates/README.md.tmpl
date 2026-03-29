@@ -17,6 +17,7 @@ Use this workspace when you want an AI agent to complete tasks like:
 - `logs/` — scratch work (drafts, logs, intermediate files). Safe to delete.
 - `temp/` — temporary files the user wants to keep around during the work.
 - `artifacts/` — final deliverables you can review and share.
+- `skills/` — the local source tree for skills created or improved in this workspace.
 
 Tip: each agent run should create matching folders under both:
 `logs/<task>/<run-id>/` and `artifacts/<task>/<run-id>/`.
@@ -28,30 +29,41 @@ Use `temp/` for user-managed one-off files that do not need the structured run-f
 - Put API keys and private settings in `workers.jsonc` only.
 - Do not commit `workers.jsonc` to git (it should be ignored automatically).
 
-## Toolchain (required for running helper scripts)
+## Tools and skill setup
 
-This workspace uses `mise` to manage tool versions (Node/Python/uv).
-
-1) Install `mise` (once per computer): https://mise.jdx.dev/getting-started.html
-2) In this folder, run:
+This workspace is designed so the initial setup can finish in one shot. If the machine is missing runtimes or skill tooling, install them once globally so Codex can use them from its sandboxed command environment.
 
 ```sh
-mise install
-mise exec -- npm i skills -g
-mise exec -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator
-mise tasks run setup
+mise use -g node@24 python@3.14 uv@latest
+mise exec node@24 -- npm list -g skills --depth=0 || mise exec node@24 -- npm install -g skills
+mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator
+# Prefer local disk source when SmartWorkers is already cloned:
+mise exec node@24 -- npx skills add -a codex -y <smartworkers-source>/skills/general/agent-skills/skills/smart-skill-maker
+# Otherwise use the canonical GitHub source:
+mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker
 ```
 
-This bootstraps the workspace runtimes, installs the `skills` CLI, and installs the `skill-creator` skill for Codex. If you don’t know what this means, ask a technical teammate to run the commands above once — after that, you can focus on tasks and reviewing outputs.
+- `npx skills` is the only tool for installing or updating agent skills in this workspace.
+- Use `smart-skill-maker` as the only tool for creating or improving skills in this workspace.
+- If a task later needs helper scripts or extra tooling, prefer mature, well-known tools before writing custom one-off code.
+- Good examples:
+  - `ffmpeg` for video/audio conversion or extraction
+  - `ImageMagick` for image conversion, compositing, and batch processing
+  - `uv` for Python environments and dependency sync
+  - repo-local `npm` scripts for Node workflows
+- Avoid random community utilities unless a technical teammate has approved them for this workspace.
+
+If a task needs a tool that is not installed yet, ask the agent or a technical teammate to install the established tool rather than building a fragile replacement from scratch.
 
 ## How to use with Codex
 
-1) Add skills with `npx skills add -a codex -y <repo-or-skill-url>`.
-2) Open Codex in this folder.
-3) Update `WORKFLOW.md` when you have recurring ways of working you want the agent to follow.
-4) Say `work work` when you want Codex to consult `WORKFLOW.md` before starting.
-5) Use `https://github.com/anthropics/skills/tree/main/skills/skill-creator` whenever you want to create or update a skill in this workspace.
-6) Ask for a task and specify outputs, for example:
+1) Open Codex in this folder.
+2) Update `WORKFLOW.md` when you have recurring ways of working you want the agent to follow.
+3) Say `work work` when you want Codex to consult `WORKFLOW.md` before starting.
+4) Use `npx skills add -a codex -y <source>` to install or refresh skills for Codex.
+5) Keep locally authored skill sources under `skills/`, and use `npx skills add -a codex -y ./skills --skill <skill-name>` to apply updates to Codex.
+6) Use `smart-skill-maker` when you want to create or improve a skill.
+7) Ask for a task and specify outputs, for example:
 
 > Output: write drafts to `logs/<task>/<run-id>/` and final deliverables to `artifacts/<task>/<run-id>/`.
 

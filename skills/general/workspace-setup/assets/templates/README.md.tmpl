@@ -47,6 +47,7 @@ npx skill ...
 - Keep installed skills inside the workspace-local `skills/` tree.
 - Do not use `skill-installer`, global npm skill installs, or Codex-home installs for workspace skills.
 - Keep skill names stable and use frontmatter `metadata.skill_version` to distinguish revisions.
+- Increment `metadata.skill_version` every time a skill is updated.
 - If a task later needs helper scripts or extra tooling, prefer mature, well-known tools before writing custom one-off code.
 - Good examples:
   - `ffmpeg` for video/audio conversion or extraction

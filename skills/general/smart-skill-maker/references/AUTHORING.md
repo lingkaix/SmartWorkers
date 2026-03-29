@@ -23,6 +23,7 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 - Skill contract: `skills/<role>/<skill-name>/SKILL.md`
 - Optional helpers: `scripts/` (deterministic automation), `assets/` (templates), `references/` (heavy docs)
 - `name` in frontmatter must match `<skill-name>` exactly.
+- `metadata.skill_version` must be incremented every time the skill is updated.
 - Start from the template when possible: `skills/general/smart-skill-maker/assets/templates/SKILL.md`
 - Use repo-relative paths in docs, examples, markdown links, and commands whenever a file inside the workspace is being referenced.
 - Do not hardcode machine-specific absolute filesystem paths from a maintainer workstation.
@@ -153,6 +154,7 @@ Recommended “done” workflow after changing a skill:
 1) Validate (if `skills-ref` is available):
    - `skills-ref validate "skills/<role>/<skill-name>"`
 2) Apply to the project-local Codex test setup with `npx skills` (required): follow `skills/AGENTS.md`
+   - Before applying, bump `metadata.skill_version` for the updated skill.
 3) Smoke test:
    - Run any referenced helper scripts with minimal safe inputs (prefer dry-run flags), and/or
    - Invoke Codex with a small prompt that triggers the skill and verify outputs land in `logs/`/`artifacts/`.

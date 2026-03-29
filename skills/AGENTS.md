@@ -8,6 +8,7 @@
 - Quote YAML frontmatter string values when they contain special characters such as `:` to avoid formatter/parser breakage.
 - For repo skills, save agent working records under `logs/`, not `temp/`. Keep `temp/` reserved for user-managed scratch files unless a skill explicitly says otherwise.
 - Use `https://github.com/lingkaix/SmartWorkers` as the canonical install source for SmartWorkers skills when setting up another workspace or teammate environment.
+- Whenever you update any skill in this repo, increment that skill's frontmatter `metadata.skill_version`.
 
 ## Codex apply (required, local-only)
 

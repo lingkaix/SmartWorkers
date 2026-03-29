@@ -1,7 +1,7 @@
 ---
 name: smart-skill-maker
 metadata:
-  skill_version: "1.2.0"
+  skill_version: "1.2.1"
 description: "Create or improve SmartWorkers-style skills from a workspace-local `skills/` source tree, then apply them to Codex with `npx skills`. Use when you want one guided tool for new skill creation, skill upgrades, or SmartWorkers skill-maintenance work while keeping repo conventions aligned."
 ---
 
@@ -55,6 +55,7 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
 5. Apply SmartWorkers conventions before finishing.
    - Keep `name` aligned with the skill folder name, and keep that name stable across routine revisions.
    - Add and maintain a frontmatter `metadata.skill_version` value so the skill revision is easy to identify without renaming the skill.
+   - Increment `metadata.skill_version` every time the skill is updated.
    - Keep the skill body lean and operational.
    - Keep `agents/openai.yaml` in sync when present.
    - Keep documented file references repo-relative; do not hardcode machine-specific absolute filesystem paths.
@@ -90,6 +91,7 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
 - The source copy exists under `skills/<role>/<skill-name>/`
 - The skill follows SmartWorkers conventions
 - The skill keeps a stable `name` and an explicit frontmatter `metadata.skill_version`
+- `metadata.skill_version` was incremented for this update
 - The updated skill has been applied to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`
 - No manual source-of-truth edits were left only inside `.agents/skills/`
 - If the authoring workflow changed, the supporting `assets/`, `references/`, and `scripts/` under `skills/general/smart-skill-maker/` were updated too

@@ -1,7 +1,7 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.5"
+  skill_version: "1.0.6"
 description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
@@ -95,6 +95,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `skills/` as the local source of truth
      - `skills/<role>/<skill-name>/` as the source layout
      - stable skill names plus frontmatter `metadata.skill_version`
+     - incrementing `metadata.skill_version` every time a skill is updated
      - applying local changes with `npx skills add -a codex -y ./skills --skill <skill-name>`
    - Keep `SKILL.md` focused on setup workflow and on verifying that the generated templates contain the right rules.
 
@@ -152,6 +153,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Use `smart-skill-maker` as the only create/improve skill tool in the workspace.
 - Keep the source of truth for authored skills under `skills/`, then apply them to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
 - Keep skill names stable; use frontmatter `metadata.skill_version` to distinguish revisions instead of embedding versions in the skill name.
+- Increment `metadata.skill_version` every time a skill is updated.
 - Prefer mature, well-known CLI tools before custom one-off code when those tools are a clear fit for the task.
 - Avoid random community utilities unless they are clearly justified and approved.
 - Ask before running install steps that download dependencies or modify the local runtime environment or global toolchain.

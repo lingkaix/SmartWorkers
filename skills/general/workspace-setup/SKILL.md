@@ -1,7 +1,7 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.4"
+  skill_version: "1.0.5"
 description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
@@ -77,9 +77,9 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
    - Install `smart-skill-maker` for Codex:
      - Default to the canonical GitHub source:
-       - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/agent-skills/skills/smart-skill-maker`
+       - `mise exec node@24 -- npx skills add -a codex -y https://github.com/lingkaix/SmartWorkers/tree/main/skills/general/smart-skill-maker`
      - Only use a local disk source when the user explicitly provides a filesystem path, typically while iterating on `smart-skill-maker` itself:
-       - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/agent-skills/skills/smart-skill-maker`
+       - `mise exec node@24 -- npx skills add -a codex -y <user-provided-smartworkers-path>/skills/general/smart-skill-maker`
    - The initializer script can help with this directly:
      - `bash skills/general/workspace-setup/scripts/init_workspace.sh --repo <path> --install`
    - If install approval or network access is unavailable, leave the workspace marked as partially set up and report the exact commands needed to finish the required bootstrap later.

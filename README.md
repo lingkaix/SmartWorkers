@@ -67,5 +67,5 @@ If you’re creating/updating skills in this repo:
 2) Install global runtimes with `mise` when needed: `mise use -g node@24 python@3.14 uv@latest`
 3) Ensure the `skills` npm package is available globally: `mise exec node@24 -- npm list -g skills --depth=0 || mise exec node@24 -- npm install -g skills`
 4) Install `skill-creator` for Codex: `mise exec node@24 -- npx skills add -a codex -y https://github.com/anthropics/skills/tree/main/skills/skill-creator`
-5) Install `smart-skill-maker` for Codex from local disk when this repo is already cloned: `mise exec node@24 -- npx skills add -a codex -y ./skills/general/agent-skills/skills/smart-skill-maker`
-6) Use the `agent-skills` maintainer skill when changing repo policy: `skills/general/agent-skills/SKILL.md`
+5) Install `smart-skill-maker` for Codex from local disk when this repo is already cloned: `mise exec node@24 -- npx skills add -a codex -y ./skills/general/smart-skill-maker`
+6) Use `smart-skill-maker` for create/improve work, and use `skills/general/agent-skills/` as the shared template/convention pack when changing repo policy.

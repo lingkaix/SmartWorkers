@@ -7,6 +7,7 @@ compatibility: "<E.g. Local filesystem required. macOS/Linux. Internet required 
 # <Skill display name>
 
 Use frontmatter `description` as the main routing field. Keep the body focused on SmartWorkers-style inputs, workflow, outputs, and safety.
+Use repo-relative paths when referencing workspace files or folders; do not hardcode workstation-specific absolute filesystem paths.
 
 ## Required inputs
 

@@ -75,9 +75,9 @@ Ask the user only when the agent cannot self-setup the missing requirement.
    Report the source pack used, the anchor model and anchor size, what passed, what was regenerated, and where the deliverables were written.
 
 ### Inputs
-- [subaru-source-pack.md](/Users/lingkaixu/Documents/GitHub/SmartWorkers/skills/car-ads-designer/ads-info-gatherer/references/subaru-source-pack.md)
-- [subaru-campaign-rules.md](/Users/lingkaixu/Documents/GitHub/SmartWorkers/skills/car-ads-designer/ads-suite-pipeline/references/subaru-campaign-rules.md)
-- [review-checklist.md](/Users/lingkaixu/Documents/GitHub/SmartWorkers/skills/car-ads-designer/ads-suite-pipeline/references/review-checklist.md)
+- [subaru-source-pack.md](../skills/car-ads-designer/ads-info-gatherer/references/subaru-source-pack.md)
+- [subaru-campaign-rules.md](../skills/car-ads-designer/ads-suite-pipeline/references/subaru-campaign-rules.md)
+- [review-checklist.md](../skills/car-ads-designer/ads-suite-pipeline/references/review-checklist.md)
 - Dealer specials page or screenshots
 - OEM model images, logos, and event guideline files
 

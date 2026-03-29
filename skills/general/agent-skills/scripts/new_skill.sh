@@ -6,7 +6,7 @@ usage() {
 new_skill.sh: scaffold a spec-compliant skill folder
 
 Usage:
-  # From the skill folder (recommended):
+  # From the helper-pack folder (recommended):
   bash scripts/new_skill.sh --role <role> --name <skill-name> [options]
 
 Options:

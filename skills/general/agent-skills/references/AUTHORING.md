@@ -12,9 +12,10 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 ## Ownership split
 
 - Use `$skill-creator` for the general skill lifecycle: draft, test, compare, improve, and tune descriptions.
-- Use `skills/general/agent-skills/SKILL.md` for SmartWorkers-specific house rules that `$skill-creator` would not know by default.
+- Use `skills/general/smart-skill-maker/SKILL.md` for the installed SmartWorkers-specific authoring workflow and house rules that `$skill-creator` would not know by default.
 - Use this document as the canonical SmartWorkers authoring reference.
 - Use `skills/general/agent-skills/assets/templates/SKILL.md` as the default scaffold.
+- Treat `skills/general/agent-skills/` as the shared helper pack that supports `smart-skill-maker`, not as a separate installed skill entry point.
 - Keep `skills/AGENTS.md` short and operational. It should point maintainers at this guide and define local sync behavior, not duplicate the full style guide.
 
 ## Directory + naming
@@ -24,6 +25,8 @@ In this repo, a **worker** is a **role** plus a curated set of skills that role 
 - Optional helpers: `scripts/` (deterministic automation), `assets/` (templates), `references/` (heavy docs)
 - `name` in frontmatter must match `<skill-name>` exactly.
 - Start from the template when possible: `skills/general/agent-skills/assets/templates/SKILL.md`
+- Use repo-relative paths in docs, examples, markdown links, and commands whenever a file inside the workspace is being referenced.
+- Do not hardcode machine-specific absolute filesystem paths from a maintainer workstation.
 
 ## Role semantics
 

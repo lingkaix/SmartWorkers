@@ -1,7 +1,7 @@
 ---
 name: smart-skill-maker
 metadata:
-  skill_version: "1.1.0"
+  skill_version: "1.2.0"
 description: "Create or improve SmartWorkers-style skills from a workspace-local `skills/` source tree, then apply them to Codex with `npx skills`. Use when you want one guided tool for new skill creation, skill upgrades, or SmartWorkers skill-maintenance work while keeping repo conventions aligned."
 ---
 
@@ -11,11 +11,9 @@ This is the single SmartWorkers skill-authoring entry point.
 
 It uses `$skill-creator` as the core drafting and improvement engine, then applies the repo's shared conventions from:
 
-- `skills/general/agent-skills/assets/templates/SKILL.md`
-- `skills/general/agent-skills/references/AUTHORING.md`
-- `skills/general/agent-skills/scripts/new_skill.sh`
-
-`skills/general/agent-skills/` is the helper pack. `smart-skill-maker` is the installed skill that maintainers and workspace users should actually invoke.
+- `skills/general/smart-skill-maker/assets/templates/SKILL.md`
+- `skills/general/smart-skill-maker/references/AUTHORING.md`
+- `skills/general/smart-skill-maker/scripts/new_skill.sh`
 
 ## Required inputs
 
@@ -34,8 +32,8 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
    - The workspace should have a local `skills/` folder with `skills/AGENTS.md`.
 
 2. Load the canonical SmartWorkers authoring materials.
-   - Use `skills/general/agent-skills/assets/templates/SKILL.md` as the default scaffold.
-   - Use `skills/general/agent-skills/references/AUTHORING.md` as the house-style reference.
+   - Use `skills/general/smart-skill-maker/assets/templates/SKILL.md` as the default scaffold.
+   - Use `skills/general/smart-skill-maker/references/AUTHORING.md` as the house-style reference.
    - Keep `skills/AGENTS.md` short and operational: it should define local apply behavior, not duplicate the full style guide.
 
 3. Make `skills/` the source of truth.
@@ -61,12 +59,12 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
    - Keep `agents/openai.yaml` in sync when present.
    - Keep documented file references repo-relative; do not hardcode machine-specific absolute filesystem paths.
    - Avoid secrets and real credentials in skill files.
-   - When the authoring workflow changes, update this skill plus the shared helper pack under `skills/general/agent-skills/` so the installed workflow and the written conventions do not drift apart.
+   - When the authoring workflow changes, update this skill's `assets/`, `references/`, and `scripts/` so the installed workflow and the written conventions do not drift apart.
 
 6. Scaffold safely when a new source folder is needed.
    - From the repo root:
-     - `bash skills/general/agent-skills/scripts/new_skill.sh --role <role> --name <skill-name>`
-   - Preview output goes to `logs/agent-skills/<timestamp>/<role>/<skill-name>/`.
+     - `bash skills/general/smart-skill-maker/scripts/new_skill.sh --role <role> --name <skill-name>`
+   - Preview output goes to `logs/smart-skill-maker/<timestamp>/<role>/<skill-name>/`.
    - Use `--apply` only after reviewing the scaffold and making any SmartWorkers-specific adjustments.
 
 7. Apply the source skill to Codex with `npx skills`.
@@ -84,7 +82,7 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
 
 - Source skill under `skills/<role>/<skill-name>/`
 - Installed Codex skill managed under `.agents/skills/<skill-name>/`
-- Shared templates and authoring guide under `skills/general/agent-skills/` when maintainer policy changes
+- Shared templates and authoring guide under `skills/general/smart-skill-maker/`
 - Any working notes or review material under `logs/`
 
 ## Definition of done
@@ -94,7 +92,7 @@ It uses `$skill-creator` as the core drafting and improvement engine, then appli
 - The skill keeps a stable `name` and an explicit frontmatter `metadata.skill_version`
 - The updated skill has been applied to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`
 - No manual source-of-truth edits were left only inside `.agents/skills/`
-- If the authoring workflow changed, the shared helper materials under `skills/general/agent-skills/` were updated too
+- If the authoring workflow changed, the supporting `assets/`, `references/`, and `scripts/` under `skills/general/smart-skill-maker/` were updated too
 
 ## Safety / quality checklist
 

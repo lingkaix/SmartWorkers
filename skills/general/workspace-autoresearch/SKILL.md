@@ -38,7 +38,7 @@ Use `README.md` for the design rationale and run model. Use `references/loop-pro
    - Define in-scope and read-only paths.
    - Define any guard conditions that must continue to hold.
    - Gather and record any user-provided research directions, reference materials, tips, or explicit decisions for this run.
-   - When the run touches `skills/`, load `skills/AGENTS.md` and `skills/general/agent-skills/references/AUTHORING.md` before generating the evaluator.
+   - When the run touches `skills/`, load `skills/AGENTS.md` and `skills/general/smart-skill-maker/references/AUTHORING.md` before generating the evaluator.
 
 2. Create the run folder and evaluator
    - Create `logs/general/workspace-autoresearch/<run-id>/`.
@@ -134,7 +134,7 @@ Use `README.md` for the design rationale and run model. Use `references/loop-pro
 - Do not begin substantial edits until the user has been warned to back up and has explicitly confirmed the run may proceed.
 - Treat this as an advanced-user skill. Prefer concise alignment and explicit decisions over tutorial-style guidance.
 - Do not use a fixed evaluator across all runs. Generate a new evaluator for each run from the user's goal.
-- When the run touches `skills/`, ground the evaluator in `skills/AGENTS.md` and `skills/general/agent-skills/references/AUTHORING.md`.
+- When the run touches `skills/`, ground the evaluator in `skills/AGENTS.md` and `skills/general/smart-skill-maker/references/AUTHORING.md`.
 - Always get explicit user approval of the generated evaluator before iteration `1`.
 - Treat user-provided research directions, references, tips, and explicit decisions as first-class run inputs. Record them in `research.md` and use them actively during planning and evaluation.
 - Do not combine unrelated changes in one iteration.

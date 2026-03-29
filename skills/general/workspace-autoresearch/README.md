@@ -118,7 +118,7 @@ The evaluator is the judge for that run. The agent should not switch standards m
 When the run touches `skills/`, the evaluator must be grounded in SmartWorkers house rules rather than improvised from memory. At minimum, the agent should load:
 
 - `skills/AGENTS.md`
-- `skills/general/agent-skills/references/AUTHORING.md`
+- `skills/general/smart-skill-maker/references/AUTHORING.md`
 
 The generated evaluator should record which standards sources were used.
 It should also record which user-provided references, directions, and decisions shaped the evaluator.
@@ -402,12 +402,12 @@ This skill should follow repo conventions:
 When the run touches `skills/`, evaluator generation should explicitly use these references as standards sources:
 
 - `skills/AGENTS.md`
-- `skills/general/agent-skills/references/AUTHORING.md`
+- `skills/general/smart-skill-maker/references/AUTHORING.md`
 
 It should also align with existing house rules in:
 
 - `skills/AGENTS.md`
-- `skills/general/agent-skills/references/AUTHORING.md`
+- `skills/general/smart-skill-maker/references/AUTHORING.md`
 
 ## What success looks like
 

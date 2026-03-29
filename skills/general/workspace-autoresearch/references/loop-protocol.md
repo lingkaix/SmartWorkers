@@ -15,7 +15,7 @@ Before editing:
    - read-only paths
    - guard conditions
    - iteration bound
-6. When the run touches `skills/`, load `skills/AGENTS.md` and `skills/general/agent-skills/references/AUTHORING.md` before generating the evaluator.
+6. When the run touches `skills/`, load `skills/AGENTS.md` and `skills/general/smart-skill-maker/references/AUTHORING.md` before generating the evaluator.
 7. Record user-provided research directions, references, tips, and explicit decisions in `research.md`.
 
 ## 2. Generate the run package

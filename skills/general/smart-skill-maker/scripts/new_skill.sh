@@ -6,7 +6,7 @@ usage() {
 new_skill.sh: scaffold a spec-compliant skill folder
 
 Usage:
-  # From the helper-pack folder (recommended):
+  # From the smart-skill-maker folder (recommended):
   bash scripts/new_skill.sh --role <role> --name <skill-name> [options]
 
 Options:
@@ -19,9 +19,9 @@ Options:
   -h, --help          Show help
 
 Notes:
-  - Without --apply, files are written to logs/agent-skills/<timestamp>/<role>/<skill-name>/ for review.
+  - Without --apply, files are written to logs/smart-skill-maker/<timestamp>/<role>/<skill-name>/ for review.
   - With --apply, this script refuses to overwrite an existing skill directory.
-  - Templates are read from skills/general/agent-skills/assets/templates/.
+  - Templates are read from skills/general/smart-skill-maker/assets/templates/.
 EOF
 }
 
@@ -92,7 +92,7 @@ if [[ "$apply" == "true" ]]; then
     exit 1
   fi
 else
-  out_dir="$repo/logs/agent-skills/$timestamp/$role/$name"
+  out_dir="$repo/logs/smart-skill-maker/$timestamp/$role/$name"
 fi
 
 mkdir -p "$out_dir"

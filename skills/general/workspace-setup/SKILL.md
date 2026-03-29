@@ -1,5 +1,7 @@
 ---
 name: workspace-setup
+metadata:
+  skill_version: "1.0.0"
 description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and global `mise` plus `npx skills` bootstrap guidance. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
@@ -51,6 +53,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `package.json` for the Node workspace manifest
      - `pyproject.toml` for the Python project manifest used by `uv`
    - Check that `AGENTS.md`, `WORKFLOW.md`, `skills/AGENTS.md`, `.gitignore`, and `.ignore` fit the workspace the user is actually setting up.
+   - Check that generated guidance files include the workspace-setup generator version and template spec version so maintainers can identify which conventions produced them.
 
 4. Handle existing repos conservatively.
    - The script never overwrites existing files.
@@ -93,6 +96,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
    - `smart-skill-maker` uses `skill-creator` as its core authoring engine, then layers SmartWorkers conventions on top.
    - The workspace-local `skills/` folder is the source of truth for skills being created or upgraded.
    - For a new skill, create it under `skills/<role>/<skill-name>/`.
+   - Keep the skill `name` stable for install/update commands, and record revisions in frontmatter `metadata.skill_version` instead of appending versions to the skill name.
    - A role is the worker identity and usage scope, not a generic tool category. Put similar capabilities into different roles when the real job, workflow, or acceptance criteria differ.
    - When improving an already installed skill and no source copy exists yet, first copy the current installed copy from `.agents/skills/<skill-name>/` into `skills/<role>/<skill-name>/`, where `<role>` is the worker the skill belongs to.
    - After the skill is created or updated in `skills/`, apply the update to Codex with:
@@ -112,6 +116,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 9. Report what was created, skipped, or left for manual follow-up.
    - Call out any files that were skipped because they already existed.
    - Confirm the repo-root files and per-folder `AGENTS.md` files now exist where expected.
+   - Report the workspace-setup generator version and template spec version used for generated guidance files.
    - If global bootstrap was requested, report the status of `mise`, npm, `npx skills`, `skill-creator`, and `smart-skill-maker`.
 
 ## Temp and output conventions
@@ -148,6 +153,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Use `npx skills` as the only install/update tool for agent skills in the workspace.
 - Use `smart-skill-maker` as the only create/improve skill tool in the workspace.
 - Keep the source of truth for authored skills under `skills/`, then apply them to Codex with `npx skills add -a codex -y ./skills --skill <skill-name>`.
+- Keep skill names stable; use frontmatter `metadata.skill_version` and generated version banners to distinguish revisions instead of embedding versions in the skill name.
 - Prefer mature, well-known CLI tools before custom one-off code when those tools are a clear fit for the task.
 - Avoid random community utilities unless they are clearly justified and approved.
 - Ask before running install steps that download dependencies or modify the local runtime environment or global toolchain.
@@ -157,6 +163,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - The repo root has `README.md`, `WORKFLOW.md`, `AGENTS.md`, `.gitignore`, `.ignore`, `workers.example.jsonc`, `package.json`, and `pyproject.toml` unless intentionally skipped because matching files already existed
 - `logs/`, `temp/`, `artifacts/`, and `skills/` exist with their corresponding `AGENTS.md` files where expected
 - The generated files accurately reflect the user's tool-version and workspace-structure constraints
+- The generated guidance files show the workspace-setup generator version and template spec version
 - If global bootstrap was requested, `mise`, npm, and `npx skills` are available globally or failures were reported clearly with next steps
 - If dependency bootstrap was requested, the required commands completed successfully or failures were reported clearly with next steps
 - If skills were part of setup, `skill-creator` and `smart-skill-maker` are installed for Codex and `npx skills` is the documented install/update path

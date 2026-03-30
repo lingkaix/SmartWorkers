@@ -3,19 +3,19 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Use $ads-suite-pipeline to create a Subaru ad suite for one vehicle model in sizes 1200x1200, 1200x628, and 1920x1080 from an approved source pack. Start with the clean 1200x1200 image, review and regenerate until it passes, then finish the other sizes one by one with SVG copy overlays and final reviews.",
+      "prompt": "Use $ads-suite-pipeline to create a dealer ad suite for one vehicle model in sizes 1200x1200, 1200x628, and 1920x1080 from an approved source pack. Start with the clean 1200x1200 image, review and regenerate until it passes, then finish the other sizes one by one with SVG copy overlays and final reviews.",
       "expected_output": "A run folder showing the anchor-size-first workflow, review loops, SVG copy assets, and approved final deliverables for all requested sizes.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Use $ads-suite-pipeline to create approved ad suites for Forester and Impreza from a single source pack. Finish one full model suite first, then use it as the style anchor for the second model while keeping the campaign visually consistent.",
+      "prompt": "Use $ads-suite-pipeline to create approved ad suites for two vehicle models from a single source pack. Finish one full model suite first, then use it as the style anchor for the second model while keeping the campaign visually consistent.",
       "expected_output": "A run summary that clearly identifies the anchor model suite, shows continuity across models, and records pass/fail history for each generated asset.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Use $ads-suite-pipeline to continue from an existing approved 1200x1200 Subaru ad and build the remaining requested sizes without drifting from the approved design. Keep all retail facts exact and do not proceed past any failed review.",
+      "prompt": "Use $ads-suite-pipeline to continue from an existing approved 1200x1200 dealer ad and build the remaining requested sizes without drifting from the approved design. Keep all retail facts exact and do not proceed past any failed review.",
       "expected_output": "A continuation run that reuses the approved anchor design, processes sizes one at a time, and only leaves approved outputs as final deliverables.",
       "files": []
     }

@@ -15,7 +15,7 @@ compatibility: Local filesystem access required. Internet access plus browser/pa
     - any available source docs or screenshots
   - `provided-folder`:
     - a user-supplied folder shaped like `assets/worker-pack-template/`
-- Load `references/subaru-source-pack.md` when working on Subaru dealer campaigns
+- Any active workflow, brief, or client playbook that defines campaign-specific rules
 
 ## Workflow
 
@@ -26,8 +26,8 @@ compatibility: Local filesystem access required. Internet access plus browser/pa
    - For `online-gather`, use browser tools such as web fetch + Playwright-style page interaction to inspect the dealer site and related sources
    - For `provided-folder`, validate the folder contents and normalize them into the same source-pack outputs
 3. In `online-gather` mode:
-   - Go to the dealer specials page
-   - Select the target vehicle set according to the Subaru rules in `references/subaru-source-pack.md`
+   - Go to the dealer specials page or other user-provided live source URLs
+   - Select the target vehicle set according to the active workflow, brief, or client instructions
    - Gather retail details, disclaimers, source images, logos, and campaign rules from the live sources
    - Save source links and extraction evidence
 4. In `provided-folder` mode:
@@ -56,7 +56,7 @@ compatibility: Local filesystem access required. Internet access plus browser/pa
 
 ## References
 
-- Load `references/subaru-source-pack.md` for the bundled Subaru source-pack contract, required gathered fields, and sample recovered ad data.
+- Use the active workflow, source-pack contract, or client brief for campaign-specific selection rules, OEM source priorities, and required sizes.
 
 ## Assets
 

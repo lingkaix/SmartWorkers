@@ -3,13 +3,13 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Use $ads-info-gatherer to build a source pack for Serramonte Subaru's current specials campaign. Gather the dealer info, 5 selected vehicles, VIN-anchored retail terms, disclaimers, output sizes, model reference assets, and guideline notes into a reusable pack for later ad generation.",
+      "prompt": "Use $ads-info-gatherer to build a source pack for a dealer's current specials campaign. Gather the dealer info, 5 selected vehicles, VIN-anchored retail terms, disclaimers, output sizes, model reference assets, and guideline notes into a reusable pack for later ad generation.",
       "expected_output": "A complete source pack written to the skill's artifact folder with campaign.json, vehicles.json, copy-pack.json, assets-manifest.json, generation-brief.json, review-standards.json, and a README.md.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Use $ads-info-gatherer to prepare the truth set for a Subaru specials campaign when the user gives you the dealer page, several screenshots, and a folder of downloaded model images. Preserve exact fragments and normalized values separately, and flag any uncertain fields instead of guessing.",
+      "prompt": "Use $ads-info-gatherer to prepare the truth set for a dealer specials campaign when the user gives you the dealer page, several screenshots, and a folder of downloaded model images. Preserve exact fragments and normalized values separately, and flag any uncertain fields instead of guessing.",
       "expected_output": "A source pack that cleanly separates exact vs normalized values, records provenance, and identifies any missing or uncertain fields.",
       "files": []
     }

@@ -25,8 +25,7 @@ compatibility: Local filesystem access required. Relies on downstream image-gene
 2. Confirm the campaign truth set is ready.
    - If the user did not provide a usable source pack or approved anchor asset, run `$ads-info-gatherer` first
    - Copy or link the approved source inputs into `source-pack/` inside the run folder
-   - Load `references/subaru-campaign-rules.md` when working on Subaru dealer campaigns
-   - If the campaign is not Subaru-specific, still follow the same anchor-first production order and treat the provided brief/source pack as the source of truth
+   - Load the active workflow, brand playbook, or campaign brief when client-specific rules apply
 3. Decide the starting mode.
    - `fresh-suite`: no approved anchor exists yet, so choose one anchor model and start at `1200x1200`
    - `continuation`: an approved anchor design already exists, so reuse it and continue with the remaining sizes/models without re-opening already approved work unless the user asks
@@ -71,7 +70,7 @@ compatibility: Local filesystem access required. Relies on downstream image-gene
 ## References
 
 - Load `references/review-checklist.md` whenever reviewing either the clean image or the final composite.
-- Load `references/subaru-campaign-rules.md` for the bundled Subaru workflow, size requirements, approval rules, and style-continuity notes.
+- Use the active workflow, approved source pack, or campaign brief for client-specific sizes, approval rules, and branding constraints.
 
 ## Outputs
 

@@ -30,7 +30,7 @@ Example prompt:
 > Act as the **[RoleName]** worker. Use the installed worker skills.  
 > Task: [what you want done].  
 > Inputs: [files/links].  
-> Output: write results to `artifacts/[something]/` (and working notes to `temp/[something]/`).
+> Output: write results to `artifacts/[something]/` (and working notes/evidence to `logs/[something]/`).
 
 ## Installing workers (skills)
 
@@ -47,7 +47,8 @@ Notes:
 
 ## Where outputs go
 
-- `temp/` — drafts, logs, intermediate files (safe to delete)
+- `logs/` — agent working notes, provenance, raw/intermediate files, and run records
+- `temp/` — user-managed temporary files or scratch space during active work
 - `artifacts/` — final deliverables (safe to review/share; don’t overwrite your inputs)
 
 ## What’s inside (simple map)

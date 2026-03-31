@@ -68,6 +68,13 @@ Ask the user only when the agent cannot self-setup the missing requirement.
   - `$ads-suite-pipeline` for the full downstream loop
   - `$fal-nano-banana-2-image-gen` as the image-maker inside the pipeline
 
+### Completion Expectation
+1. Treat a Subaru ad request as an end-to-end workflow request by default, not as a request to stop at an intermediate checkpoint.
+2. Do not stop after the source pack, first draft, first approved size, review notes, or partial suite if the next workflow step can be executed safely.
+3. Continue through gathering, generation, review, regeneration, SVG copy, overlays, size expansion, model expansion, and final handoff until the full requested workflow is complete.
+4. Pause only when there is a real blocker or meaningful risk, such as missing required credentials, paid approval requirements, ambiguous source truth, upstream service failure, broken tooling, or a high-risk design/content decision that should not be guessed.
+5. When a pause is required, report the exact blocker, what has already been completed, what remains, and the next action needed to resume.
+
 ### Subaru Ads Info Gathering
 
 #### Source Rules
@@ -194,3 +201,5 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 - Do not start the other model suites before one full suite is approved and available as the reference design.
 - Do not select a dealer special until its linked detail page has been checked for the exact model and live availability.
 - If exact copy does not fit, adjust layout; do not invent, shorten, or beautify retail facts or disclaimers.
+- Do not stop the workflow early just to provide a progress update when the next step is already clear and safe to execute.
+- Default behavior is to finish the whole workflow in one run unless a real blocker or risk requires escalation.

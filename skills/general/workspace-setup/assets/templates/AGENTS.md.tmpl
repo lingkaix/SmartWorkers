@@ -51,15 +51,27 @@ This file is for agent runners and maintainers of this workspace. It defines how
 ## Secret and config policy
 
 - Workspace-root `workers.jsonc` is the single source of truth for API keys, secrets, and endpoints.
+- Never modify `workers.jsonc` or any other existing config file unless the user explicitly confirms that exact edit first.
+- When the goal is only to add examples, hints, or placeholders, default to append-only help. Do not delete, rewrite, normalize, reorder, or "clean up" existing config without user permission.
+- Preserve unrelated keys, comments, formatting, and credentials exactly as they are unless the user clearly approves a broader config change.
 - Never ask users to paste secrets into chat.
 - Never “work around” missing config by using env vars, hardcoding, or interactive prompts.
 - Never print or log secrets from `workers.jsonc` (it’s OK to say “`openai.apiKey` is missing”, but not the value).
 
-### Missing or invalid required config: guide user, then stop
+### Missing or invalid required config: ask first, prefer append-only help, then stop
 
 If a skill requires a config value and it’s missing or appears invalid (for example: API authentication fails), do the following:
 
-1) Add or update a placeholder hint in `workers.jsonc` (do not invent values), for example:
+1) Tell the user the exact config path that is missing or failing, and why it blocks the task.
+
+2) Ask whether they want you to append a clearly marked placeholder or example to the existing config file.
+   Do not edit the file before the user says yes.
+
+3) If the user approves, only append the smallest clearly marked placeholder/example needed.
+   Do not delete, rewrite, rename, reorder, or reformat existing config.
+   If a safe append would still require changing existing keys or structure, do not edit the file; give the user the exact snippet and placement instructions instead.
+
+   For example, give or append a snippet like:
 
 ```jsonc
 {
@@ -69,8 +81,8 @@ If a skill requires a config value and it’s missing or appears invalid (for ex
 }
 ```
 
-2) Stop the task.
-3) Give the user non-technical, actionable next steps:
+4) Stop the task.
+5) Give the user non-technical, actionable next steps:
 
    - Open the file `workers.jsonc` at the top level of the repo.
    - Find the setting called `openai.apiKey` (or the exact key name you referenced in your error message).
@@ -78,13 +90,13 @@ If a skill requires a config value and it’s missing or appears invalid (for ex
    - Save the file.
    - Re-run the task.
 
-4) If the value is present but still fails auth, tell the user what to do next:
+6) If the value is present but still fails auth, tell the user what to do next:
 
    - Double-check they edited the correct file: workspace-root `workers.jsonc` (not `workers.example.jsonc`).
    - Ensure the key is copied fully (no missing characters, no newline at the end).
    - If they’re not sure the key is valid, they may need to generate a new key in the provider’s dashboard and update `workers.jsonc`.
 
-5) If the user can’t fix it (or it seems complex), guide them to seek help from a technical person and provide an “inspection bundle” they can forward:
+7) If the user can’t fix it (or it seems complex), guide them to seek help from a technical person and provide an “inspection bundle” they can forward:
 
    - The exact error message (with any secrets removed).
    - The exact command they ran.

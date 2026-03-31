@@ -1,7 +1,7 @@
 ---
 name: workspace-setup
 metadata:
-  skill_version: "1.0.7"
+  skill_version: "1.0.8"
 description: "Initialize a SmartWorkers-style agent workspace with repo-root guidance, `logs/`/`temp/`/`artifacts/`, a local `skills/` source tree, ignore rules, config templates, and the required global `mise` plus `npx skills`, `skill-creator`, and `smart-skill-maker` bootstrap completed in one turn by default. Use when starting a new agent workspace, bootstrapping a fresh project folder for repeatable agent work, or standardizing README, WORKFLOW, AGENTS, and skill-management flow before adding more automation."
 compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access may be needed for global `mise` or `npm` installs, `npx skills` installs, and optional `uv sync`."
 ---
@@ -90,6 +90,9 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
      - `skill-creator` and `smart-skill-maker` as required baseline tooling
      - the default GitHub install source for `smart-skill-maker`, with local-disk install only when the user explicitly provides a path
      - `smart-skill-maker` as the only create/improve tool for workspace skills
+     - explicit user confirmation before editing `workers.jsonc` or any other existing config file
+     - append-only behavior for example or placeholder config help by default, without deleting, rewriting, reordering, or reformatting unrelated config
+     - falling back to giving the user an exact snippet plus instructions when a safe append would still require restructuring existing config
    - The generated `skills/AGENTS.md` should define:
      - `skills/` as the local source of truth
      - `skills/<role>/<skill-name>/` as the source layout
@@ -145,6 +148,8 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 - Default to direct apply plus bootstrap. This skill is meant to finish setup in one shot for non-technical users.
 - Treat this as a new-workspace initializer, not a blind in-place upgrader for mature repos.
 - Keep real secrets in `workers.jsonc`; `workers.example.jsonc` should stay safe to commit.
+- Do not edit `workers.jsonc` or any other existing config file without explicit user confirmation.
+- When only adding config examples or placeholders, prefer append-only updates and never touch unrelated keys, formatting, comments, or ordering.
 - Prefer the script for deterministic setup, and manual edits only when the user wants partial adoption into an existing repo.
 - Prefer global `mise` for Codex runtimes when Node, Python, npm, npx, or uv are missing.
 - Treat `npx skills`, `skill-creator`, and `smart-skill-maker` as required setup baseline for every SmartWorkers workspace, not optional extras.
@@ -172,6 +177,7 @@ compatibility: "macOS/Linux (Windows via WSL2). Requires bash. Internet access m
 
 - Do not overwrite existing repo files without review; use manual adoption when a repo already has its own structure.
 - Do not put secrets in `workers.example.jsonc`, `package.json`, or `pyproject.toml`.
+- Do not auto-rewrite existing config files when a placeholder or example would do; require user confirmation first, then keep any approved change append-only whenever possible.
 - `.ignore` changes what the agent can see; avoid reading or printing secret material unless the task truly requires it.
 - Treat runtime, tool, and package installation as a separate approval point because it downloads software and changes the local environment.
 - Do not manually edit `.agents/skills/` as the source of truth for authored skills.

@@ -1,6 +1,6 @@
-# Workflow Guide
+# Subaru Dealer Ads Workflow
 
-Keep this file short, practical, and current.
+Use this workflow for Subaru dealer ad work: gathering ad data, selecting models, collecting official assets, generating ad images, reviewing/regenerating, creating SVG copy, overlaying copy, and finishing a multi-size or multi-model ad suite.
 
 ## Startup Check
 
@@ -12,13 +12,13 @@ Before running the Subaru ad workflow, verify the essentials are ready.
    - `$ads-info-gatherer`
    - `$ads-suite-pipeline`
    - `$fal-nano-banana-2-image-gen`
-2. Confirm the active local skill copies are synced in `.agents/skills/`:
+2. Confirm the active local skill copies are synced in `.agents/skills/` when this workspace uses installed local copies:
    - `.agents/skills/ads-info-gatherer/`
    - `.agents/skills/ads-suite-pipeline/`
    - `.agents/skills/fal-nano-banana-2-image-gen/` if this workspace keeps a local copy
 3. Confirm the required tools/config are available:
    - Node.js for the Nano Banana generator script
-   - internet access if generation or live gathering needs it
+   - internet access if gathering or generation needs it
    - `workers.jsonc` with the required API key(s), especially `fal.key`
    - `workers.jsonc` with Subaru Marketing credentials if Subaru asset gathering needs login:
      - `subaruMarketing.username`
@@ -28,7 +28,7 @@ Before running the Subaru ad workflow, verify the essentials are ready.
 
 If setup is incomplete, the agent should fix the local parts first before asking the user for help.
 
-1. Install or sync missing skills from the SmartWorkers source repo:
+1. Install or sync missing skills from the SmartWorkers source repo if needed:
    - canonical source: `https://github.com/lingkaix/SmartWorkers`
    - if this workspace is already a checkout of that repo, sync from local `skills/`
    - otherwise install the needed skills from that GitHub repo into `.agents/skills/`
@@ -37,7 +37,7 @@ If setup is incomplete, the agent should fix the local parts first before asking
 4. If `workers.jsonc` is missing or the required key is absent, ask the user only for the necessary info:
    - which key is missing
    - where it should be stored
-   - which skill needs it
+   - which skill or workflow needs it
    - for Subaru Marketing access, use:
      ```jsonc
      {
@@ -47,7 +47,7 @@ If setup is incomplete, the agent should fix the local parts first before asking
        }
      }
      ```
-5. Do not start generation until required keys and tools are present.
+5. Do not start generation or authenticated Subaru asset gathering until required keys and tools are present.
 
 ### Ask User For
 
@@ -62,6 +62,7 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 ## Subaru Ad Loop
 
 ### Trigger
+
 - Use this workflow for Subaru dealer ad work: gathering ad data, generating ad images, reviewing/regenerating, creating SVG copy, overlaying copy, and finishing a multi-size or multi-model ad suite.
 - Default skill shape:
   - `$ads-info-gatherer` for the source pack
@@ -69,6 +70,7 @@ Ask the user only when the agent cannot self-setup the missing requirement.
   - `$fal-nano-banana-2-image-gen` as the image-maker inside the pipeline
 
 ### Completion Expectation
+
 1. Treat a Subaru ad request as an end-to-end workflow request by default, not as a request to stop at an intermediate checkpoint.
 2. Do not stop after the source pack, first draft, first approved size, review notes, or partial suite if the next workflow step can be executed safely.
 3. Continue through gathering, generation, review, regeneration, SVG copy, overlays, size expansion, model expansion, and final handoff until the full requested workflow is complete.
@@ -78,16 +80,20 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 ### Subaru Ads Info Gathering
 
 #### Source Rules
-1. Treat `https://www.subarumarketing.com/main.aspx` as the official source for Subaru ad assets.
-   Use it for model product images and other OEM creative assets.
-2. Use dealer sites only for ad info and event info.
-   Dealer specials pages are for offers, dealer context, and stock checks.
-   Dealer images are low-resolution and must not be treated as final ad assets.
-3. Dealer images may still be downloaded as fallback model references.
-   Keep them only to help catch a wrong trim/model image later.
-4. If Subaru Marketing requires login and `workers.jsonc` does not already contain `subaruMarketing.username` and `subaruMarketing.password`, stop and ask the user to add them there.
+
+1. `https://www.subarumarketing.com/` is enough for Subaru OEM source gathering.
+   Use Subaru Marketing for Subaru product assets and Subaru event materials.
+2. The actual ad assets should still come from `https://www.subarumarketing.com/main.aspx`.
+   Use that page for model product images, logos, and other OEM creative assets.
+3. Use dealer sites only for ads info and event info discovery.
+   Dealer specials pages are for offers, dealer context, stock checks, and local campaign or event details.
+4. Dealer images are low-resolution and must not be treated as final ad assets.
+5. Dealer images may still be downloaded as model-reference backups.
+   Keep them in case the team later finds that an OEM asset was matched to the wrong model, trim, look, or style.
+6. If Subaru Marketing requires login and `workers.jsonc` does not already contain `subaruMarketing.username` and `subaruMarketing.password`, stop and ask the user to add them there.
 
 #### Sub-Agent Pattern
+
 1. Use sub-agents by default for the gathering phase to keep the main agent context clean.
 2. The main agent should act as coordinator only:
    - define the dealer source page and target dealer
@@ -101,21 +107,26 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 4. Each sub-agent should write compact notes and structured outputs to the task run folder so the main agent can ingest results without re-reading the whole crawl.
 
 #### Dealer Specials Selection Rules
-1. Crawl the full specials list before choosing models.
-2. Default target is 5 car models for ad creation unless the user says otherwise.
-3. Unless the user gives a different mix, aim for:
+
+1. For dealer ads info, start from the dealer specials page.
+   The first Subaru target is `https://www.serramontesubaru.com/serramonte-subaru-specials.htm` unless the user supplies another dealer source.
+2. Crawl all deals on the list before making any picks.
+3. After the full crawl, pick 5 dealer deals to make ads unless the user says otherwise.
+4. Unless the user gives a different mix, aim for:
    - 3 models with the strongest live inventory
    - 2 more with the strongest lease, APR, or retail offers
-4. Prefer popular Subaru models when they are available on the list.
+5. Prefer popular Subaru models when they are available on the list.
    Forester, Outback, and Crosstrek are the default priority examples.
-5. Prefer deals that are visibly promoted as special offers.
-   Examples include tiles or copy that call out `special`, `$xxx off`, or similar highlighted offer language.
-6. Click into each deal from the specials page to confirm the exact model name, look, and style before selecting it.
-7. If the linked detail page is missing, broken, or effectively unavailable, treat that model as out of stock and do not pick it for ads.
-8. Keep rejected candidates in the notes with the reason they were excluded.
-   This prevents the same out-of-stock or mismatched model from being reconsidered later.
+6. Prefer deals that are visibly marked or promoted as special offers.
+   Examples include `special`, `$xxx off`, or similar highlighted wording on the card or image.
+7. Before a deal can be picked for ads, click into its linked detail page and confirm the exact model name, look, and style.
+8. If the linked detail page is missing, broken, or effectively unavailable, treat that deal as out of stock for the dealer.
+   Do not pick that deal to make ads.
+9. Keep rejected deals in the notes with the reason they were excluded.
+   This prevents the same out-of-stock or mismatched deal from being reconsidered later.
 
 ### Steps
+
 1. Start by gathering the campaign truth set.
    Save exact fragments and normalized values separately.
    Include retail details, dealer info, event info, stock validation notes, VIN-anchored vehicle data when available, disclaimers, car logs/history, source images, logos, guidelines, and generation constraints.
@@ -138,6 +149,7 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 ### Subaru Source-Pack Contract
 
 #### Accepted Input Modes
+
 1. `online-gather`
    - Use browser tools to inspect the dealer specials page and related live sources.
    - Use live source evidence, not guesswork.
@@ -146,6 +158,7 @@ Ask the user only when the agent cannot self-setup the missing requirement.
    - Validate the folder and report any missing required files before downstream generation starts.
 
 #### Required Gathered Fields
+
 - dealer name
 - campaign or event name
 - event date range
@@ -167,6 +180,7 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 - prior approved references or car-history notes useful for continuity
 
 #### Required Sizes
+
 - `1200x1200`
 - `1200x628`
 - `900x1600` or `1080x1920`
@@ -174,17 +188,20 @@ Ask the user only when the agent cannot self-setup the missing requirement.
 - Chinese-only variant: `300x600`
 
 ### Inputs
+
 - Dealer specials page or screenshots
 - Subaru Marketing credentials in `workers.jsonc` when required
 - OEM model images, logos, and event guideline files from `https://www.subarumarketing.com/main.aspx`
 - Dealer images only as low-resolution fallback references
 
 ### Outputs
+
 - Working logs, prompts, drafts, reviews, sub-agent notes, and intermediate files go to `logs/<short-desc>/<run-folder>/`
 - Final structured source packs and approved deliverables go to `artifacts/<short-desc>/<run-folder>/`
-- Leave review files, issue lists, and pass/fail records with the outputs
+- Leave review files, issue lists, and pass or fail records with the outputs
 
 ### Guardrails
+
 - VIN is the anchor and cannot be changed for layout reasons.
 - Year and trim must be exact.
 - Keep exact text fragments and normalized interpretations separate.
